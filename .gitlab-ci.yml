@@ -9,10 +9,10 @@ stages:
     - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
     - 'git config --global user.name "Dotfiles CI"'
-    - 'git config --global user.email james@james.tl'
+    - 'git config --global user.email git@joyfullee.me'
     - 'eval $(ssh-agent -s)'
     - 'chmod 600 "$SSH_PRIVATE_KEY" && ssh-add "$SSH_PRIVATE_KEY"'
-    - 'git remote set-url origin git@gitlab.james.tl:james/dotfiles.git'
+    - 'git remote set-url origin git@gitlab.james.tl:joy/dotfiles.git'
   script:
     - './.refresh'
     - 'git add -f .'
