@@ -358,7 +358,7 @@ class SwayWorkspace
   # Queue a sway(5) command to be batched and executed later
   def swaymsg(args, window = nil)
     args.unshift("[con_id=#{window['id']}]") if window
-    swaycmd = args.map { |arg| arg =~ /\s/ && arg !~ /^\[.*\]$/ ? "'#{arg}'" : arg }.join(' ')
+    swaycmd = args.map(&:to_s).map { |arg| arg =~ /\s/ && arg !~ /^\[.*\]$/ ? "'#{arg}'" : arg }.join(' ')
     @swaycmd_queue << swaycmd
   end
 
