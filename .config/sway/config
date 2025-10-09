@@ -1,0 +1,142 @@
+# Load system configs like input and output configuration
+include /etc/sway/config
+
+#
+# Preferences
+#
+mouse_warping none
+tiling_drag disable
+
+#
+# Cosmetics
+#
+output * bg ~/.wallpaper.png stretch
+gaps inner 13
+default_border pixel 3
+default_floating_border pixel 3
+
+client.focused          '#ab4642' '#ab4642' '#282828' '#ab4642' '#ab4642'
+client.focused_inactive '#585858' '#585858' '#282828' '#585858' '#585858'
+client.unfocused        '#585858' '#585858' '#282828' '#585858' '#585858'
+client.urgent           '#f7ca88' '#f7ca88' '#282828' '#f7ca88' '#f7ca88'
+
+#
+# Keybindings
+#
+set $mod Mod4
+bindsym $mod+Shift+Return exec footclient
+bindsym $mod+f            fullscreen
+bindsym $mod+t            floating toggle
+bindsym $mod+x            kill
+bindsym $mod+p            exec ~/.config/sway/scripts/rofi -show drun -dpi 96
+bindsym $mod+q            reload
+bindsym $mod+Shift+q      exec swaynag -t warning -m '' -b 'Exit sway' 'systemctl --user stop graphical-session.target; swaymsg exit'
+
+bindsym $mod+h         focus left
+bindsym $mod+l         focus right
+bindsym $mod+j         focus down
+bindsym $mod+k         focus up
+bindsym Mod1+Tab       exec sway-layout-manager focus_next
+bindsym Mod1+Shift+Tab exec sway-layout-manager focus_prev
+bindsym $mod+semicolon [con_mark="_last_focused"] focus
+
+bindsym $mod+Shift+c     exec dunstctl close
+bindsym $mod+Shift+p     exec dunstctl history-pop
+bindsym $mod+Shift+Space exec dunstctl context
+
+bindsym $mod+s                exec ~/.xmonad/scripts/screensaver toggle
+bindsym $mod+Space            exec playerctl play-pause
+bindsym XF86AudioPlay         exec playerctl play-pause
+bindsym XF86AudioMicMute      exec ~/.xmonad/scripts/volume toggle-mute
+bindsym XF86AudioMute         exec ~/.xmonad/scripts/volume toggle-mute
+bindsym XF86AudioLowerVolume  exec ~/.xmonad/scripts/volume -0.5dB
+bindsym XF86AudioRaiseVolume  exec ~/.xmonad/scripts/volume +0.5dB
+bindsym XF86MonBrightnessDown exec ~/.xmonad/scripts/brightness decrease
+bindsym XF86MonBrightnessUp   exec ~/.xmonad/scripts/brightness increase
+
+bindsym Mod1+Shift+a exec ~/.xmonad/scripts/bw-type jtl/admin 4b70ddc9-0b8a-4479-9691-d330a6b61264
+bindsym Mod1+Shift+s exec ~/.xmonad/scripts/bw-type jtl/root 687ad9eb-489e-419c-984a-6dabdbe463b7
+bindsym Mod1+Shift+u exec ~/.xmonad/scripts/bw-type UMD 042bbfbc-befc-41d1-8c13-3fc3fd0e289f
+
+floating_modifier $mod normal
+
+#
+# Workspaces
+#
+set $ws1 '1: web'
+set $ws2 '2: ops'
+set $ws3 '3: dev'
+set $ws4 '4: music'
+#set $ws5 '5[H]: mail'
+set $ws5 '5: mail'
+set $ws6 '6: six'
+set $ws7 '7: seven'
+set $ws8 '8: eight'
+set $ws9 '9: nine'
+set $ws10 '10: ten'
+
+# Set default workspace names
+bindsym $mod+Mod1+1 workspace number $ws1
+bindsym $mod+Mod1+2 workspace number $ws2
+bindsym $mod+Mod1+3 workspace number $ws3
+bindsym $mod+Mod1+4 workspace number $ws4
+bindsym $mod+Mod1+5 workspace number $ws5
+bindsym $mod+Mod1+6 workspace number $ws6
+bindsym $mod+Mod1+7 workspace number $ws7
+bindsym $mod+Mod1+8 workspace number $ws8
+bindsym $mod+Mod1+9 workspace number $ws9
+bindsym $mod+Mod1+0 workspace number $ws10
+
+# Prefer greedy view algorithm to switch workspaces
+bindsym $mod+1 exec sway-greedy-view $ws1
+bindsym $mod+2 exec sway-greedy-view $ws2
+bindsym $mod+3 exec sway-greedy-view $ws3
+bindsym $mod+4 exec sway-greedy-view $ws4
+bindsym $mod+5 exec sway-greedy-view $ws5
+bindsym $mod+6 exec sway-greedy-view $ws6
+bindsym $mod+7 exec sway-greedy-view $ws7
+bindsym $mod+8 exec sway-greedy-view $ws8
+bindsym $mod+9 exec sway-greedy-view $ws9
+bindsym $mod+0 exec sway-greedy-view $ws10
+
+bindsym $mod+a workspace back_and_forth
+
+bindsym $mod+Shift+1 exec sway-layout-manager move $ws1
+bindsym $mod+Shift+2 exec sway-layout-manager move $ws2
+bindsym $mod+Shift+3 exec sway-layout-manager move $ws3
+bindsym $mod+Shift+4 exec sway-layout-manager move $ws4
+bindsym $mod+Shift+5 exec sway-layout-manager move $ws5
+bindsym $mod+Shift+6 exec sway-layout-manager move $ws6
+bindsym $mod+Shift+7 exec sway-layout-manager move $ws7
+bindsym $mod+Shift+8 exec sway-layout-manager move $ws8
+bindsym $mod+Shift+9 exec sway-layout-manager move $ws9
+bindsym $mod+Shift+0 exec sway-layout-manager move $ws10
+
+bindsym $mod+Plus      exec sway-layout-manager inc
+bindsym $mod+Minus     exec sway-layout-manager dec
+bindsym $mod+Tab       exec sway-layout-manager toggle_halved
+bindsym $mod+r         exec sway-layout-manager reflect
+bindsym $mod+Shift+r   exec sway-layout-manager flip
+bindsym $mod+Equal     exec sway-layout-manager balance
+bindsym $mod+u         exec sway-layout-manager swap_up
+bindsym $mod+d         exec sway-layout-manager swap_down
+bindsym $mod+Return    exec sway-layout-manager swap_master
+bindsym $mod+Shift+h   exec sway-layout-manager shrink_master
+bindsym $mod+Shift+l   exec sway-layout-manager grow_master
+bindsym $mod+Shift+j   exec sway-layout-manager shrink_child
+bindsym $mod+Shift+k   exec sway-layout-manager grow_child
+bindsym $mod+Ctrl+l    exec sway-layout-manager refresh
+bindsym $mod+BackSpace exec sway-layout-manager reset $ws1 $ws2 $ws3 $ws4 $ws5 $ws6 $ws7 $ws8 $ws9 $ws10
+
+#
+# Windows
+#
+for_window [title="Sway Idle Inhibitor"] move scratchpad, inhibit_idle open
+for_window [app_id="kdesystemsettings"] floating enable
+
+#
+# Session
+#
+exec 'systemctl --user stop graphical-session.target && ~/bin/reset-systemd-environment && systemctl --user start sway-session.target'
+
+# vim: filetype=conf

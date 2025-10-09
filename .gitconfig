@@ -1,0 +1,20 @@
+[user]
+	name = Joyful Lee
+	email = git@joyfullee.me
+	signingKey = ~/.ssh/id_ed25519
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+[commit]
+	gpgSign = true
+[color]
+	ui = auto
+[pull]
+	ff = only
+[push]
+	default = simple
+[init]
+	defaultBranch = main
+[safe]
+	directory = *
