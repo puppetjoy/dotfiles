@@ -2,11 +2,6 @@
 dark = ColorScheme.dark.colors_by_base
 gui_scaling_factor = @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
-term = if @facts['profile'] && ['pinebookpro'].include?(@facts['profile']['platform'])
-         'xterm'
-       else
-         'urxvtc'
-       end
 -%>
 import XMonad
 import XMonad.Core
@@ -262,7 +257,7 @@ main = xmonad
     . withNavigation2DConfig def { defaultTiledNavigation = centerNavigation }
     $ def
     { modMask            = mod4Mask
-    , terminal           = "<%= term %>"
+    , terminal           = "alacritty"
     , startupHook        = startupHook'
     , logHook            = logHook'
     , layoutHook         = layoutHook'
