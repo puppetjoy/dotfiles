@@ -5,7 +5,7 @@
 # builders and templates, primarily so I can integrate it into my
 # ERB-based dotfiles, managed by Puppet at:
 #
-# https://github.com/iamjamestl/dotfiles/blob/master/bin/refresh-dotfiles
+# https://gitlab.joyfullee.me/joy/dotfiles/-/blob/preprocessed/bin/refresh-dotfiles
 #
 # This has also been carefully extended to work well with low-color
 # terminals, like the Linux console.

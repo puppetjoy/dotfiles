@@ -11,7 +11,7 @@ BASEDIR="$(cd "$(dirname "$0")/.." && echo "$PWD")"
 
 # Just download and extract compiled repository in non-git-based directories
 if [[ ! -d "${BASEDIR}/.git" ]]; then
-    curl -s https://gitlab.james.tl/james/dotfiles/-/archive/preprocessed/dotfiles-preprocessed.tar.gz | tar -C "$BASEDIR" -xvzf - --strip 1
+    curl -s https://gitlab.joyfullee.me/joy/dotfiles/-/archive/preprocessed/dotfiles-preprocessed.tar.gz | tar -C "$BASEDIR" -xvzf - --strip 1
     exit
 fi
 

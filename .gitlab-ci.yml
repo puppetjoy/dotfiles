@@ -12,7 +12,7 @@ stages:
     - 'git config --global user.email git@joyfullee.me'
     - 'eval $(ssh-agent -s)'
     - 'chmod 600 "$SSH_PRIVATE_KEY" && ssh-add "$SSH_PRIVATE_KEY"'
-    - 'git remote set-url origin git@gitlab.james.tl:joy/dotfiles.git'
+    - 'git remote set-url origin git@gitlab.joyfullee.me:joy/dotfiles.git'
   script:
     - './.refresh'
     - 'git add -f .'
