@@ -110,8 +110,21 @@ fi
 autoload -U promptinit && promptinit
 prompt mine
 
-# Enable command autocompletion
-autoload -U compinit && compinit -u
+# Is / on NFS?
+is-nfs-root() {
+    [[ -r /proc/mounts ]] || return 1
+    local fstype
+    fstype=$(awk '$2 == "/" {print $3; exit}' /proc/mounts 2>/dev/null)
+    [[ $fstype == nfs* ]]
+}
+
+# Enable command autocompletion (unless on NFS)
+if is-nfs-root; then
+    # Provide a no-op compdef so calls in this file don't error
+    (( $+functions[compdef] )) || compdef() { :; }
+else
+    autoload -U compinit && compinit -u
+fi
 
 # Color list autocompletion
 if whence dircolors > /dev/null; then
