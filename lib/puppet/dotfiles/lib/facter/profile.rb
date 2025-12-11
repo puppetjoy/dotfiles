@@ -7,7 +7,7 @@ Facter.add('profile') do
     when %r{nest:(\S+)/(\S+)/(\S+)}
       { architecture: arch, cpu: Regexp.last_match(1), platform: Regexp.last_match(2), variant: Regexp.last_match(3) }
     when %r{nest:(\S+)/(\S+)}
-      { architecture: arch, cpu: Regexp.last_match(1), platform: Regexp.last_match(1), variant: Regexp.last_match(2) }
+      { architecture: arch, cpu: Regexp.last_match(1), variant: Regexp.last_match(2) }
     end
   end
 end
