@@ -3,7 +3,12 @@ Description=picom compositor
 PartOf=xmonad-session.target
 
 [Service]
-ExecStart=/usr/bin/picom --backend=glx --vsync
+ExecStart=/bin/sh -c '\
+  if [ "$(systemd-detect-virt)" = vmware ]; then \
+    exec /usr/bin/picom --backend=xrender --vsync; \
+  else \
+    exec /usr/bin/picom --backend=glx --vsync; \
+  fi'
 
 [Install]
 WantedBy=xmonad-session.target
