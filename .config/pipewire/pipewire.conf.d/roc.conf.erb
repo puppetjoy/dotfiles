@@ -1,5 +1,5 @@
 <% case @facts['networking']['hostname'] -%>
-<% when 'falcon', 'wren' -%>
+<% when 'falcon', 'lark' -%>
 # See: https://gavv.net/articles/roc-tutorial-0.2/#configure-pipewire-source-roc-receiver
 context.modules = [
   {   name = libpipewire-module-roc-source
@@ -10,7 +10,7 @@ context.modules = [
 <% case @facts['networking']['hostname'] -%>
 <% when 'falcon' -%>
           sess.latency.msec = 50
-<% when 'wren' -%>
+<% when 'lark' -%>
           sess.latency.msec = 100
 <% end -%>
           local.source.port = 10001
