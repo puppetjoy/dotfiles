@@ -12,6 +12,7 @@ import XMonad.Actions.GroupNavigation
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.TopicSpace
+import XMonad.Actions.UpdatePointer
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.InsertPosition
@@ -170,6 +171,7 @@ logHook' = do
     workspaceHistoryHook
     refocusLastLogHook
     raiseOverlays
+    updatePointer (0.5, 0.5) (0, 0)
 
 layoutHook' = id
     . onWorkspace "windows" (noBorders Full)
@@ -226,11 +228,6 @@ manageHook' = composeOne
     , pure True                               -?> insertPosition Below Newer
     ]
 
-activateHook' = composeOne
-    [ className =? "code" -?> doIgnore  -- prevent focus stealing
-    , pure True           -?> doFocus
-    ]
-
 handleEventHook' =
     refocusLastWhen (return True) <+> lowerPanelOnTimer
   where
@@ -251,7 +248,6 @@ workspaces' = ["web", "ops", "dev", "music", "mail", "chat", "seven", "eight", "
 
 main = xmonad
     . docks
-    . setEwmhActivateHook activateHook'
     . ewmh
     . pagerHints
     . withNavigation2DConfig def { defaultTiledNavigation = centerNavigation }
