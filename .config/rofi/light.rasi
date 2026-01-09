@@ -1,0 +1,61 @@
+* {
+    font: "monospace 9";
+    text-color: #4d4d4c;
+    background-color: rgba(0, 0, 0, 0);
+    spacing: 0;
+}
+
+#window {
+    background-color: rgba(255, 255, 255, 100%);
+    border: 3px;
+    border-color: #8e908c;
+    padding: 2px;
+}
+
+#listview {
+    scrollbar: true;
+}
+
+#scrollbar {
+    handle-color: #8e908c;
+    handle-width: 1ch;
+}
+
+#element selected {
+    background-color: #d6d6d6;
+}
+
+#element active {
+    text-color: #4271ae;
+}
+
+#element selected.active {
+    text-color: #4271ae;
+}
+
+#element urgent {
+    text-color: #eab700;
+}
+
+#element selected.urgent {
+    text-color: #eab700;
+}
+
+#inputbar {
+    children: [prompt, textbox-prompt-colon, entry, case-indicator];
+}
+
+#prompt {
+    font: "monospace bold 9";
+    text-color: #e0e0e0;
+    background-color: #718c00;
+    padding: 0 1ch 0 1ch;
+}
+
+#textbox-prompt-colon {
+    text-color: #718c00;
+    expand: false;
+    str: " ";
+}
+
+/* vim: filetype=css
