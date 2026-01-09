@@ -5,6 +5,7 @@ text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
 -%>
 import XMonad
 import XMonad.Core
+import XMonad.Operations (unGrab)
 import qualified XMonad.StackSet as W
 
 import XMonad.Actions.CycleWS
@@ -41,7 +42,6 @@ import XMonad.Util.EZConfig
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Timer
-import XMonad.Util.Ungrab
 import XMonad.Util.WorkspaceCompare
 
 import System.Taffybar.Support.PagerHints
