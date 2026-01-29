@@ -1,0 +1,11 @@
+[Unit]
+Description=Input Leap keyboard/mouse server
+PartOf=x-session.target
+ConditionFileNotEmpty=%h/.config/InputLeap/input-leap.conf
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/input-leaps --disable-crypto
+
+[Install]
+WantedBy=x-session.target
