@@ -39,7 +39,7 @@ fi
 # unavailable, then it will return a non-zero exit code and zsh will
 # continue as a fallback; and when tmux does run and exits cleanly, I
 # still want ~/.zlogout evaluated.
-if [[ ! $TMUX ]]; then
+if [[ ! $TMUX && ! $NO_AUTO_TMUX ]]; then
     t 2>/dev/null && exit
 fi
 
