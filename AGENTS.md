@@ -43,6 +43,7 @@
 - Use `rg -uu` (or `--no-ignore`) for searching; plain `rg` will often return nothing.
 - Adding new tracked files requires `git add -f`.
 - Generated files on `main` are usually untracked/ignored unless force-added.
+- If SSH-signed git commit/revert/cherry-pick fails in sandboxed execution (for example `ssh_askpass`/passphrase errors), rerun the git command outside the sandbox via escalated execution.
 
 ## Codebase Shape
 - Large portions are vendored third-party content.

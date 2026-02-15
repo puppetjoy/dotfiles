@@ -10,10 +10,10 @@ set -g mouse on
 setw -g mode-keys vi
 
 # Configure additional variables to update on session attachment
-run-shell ~/.tmux/env.tmux
+run-shell "~/.tmux/run-shell-profile.tmux env ~/.tmux/env.tmux"
 
 # Configure my status bar, color scheme, and prefix based on TERM
-run-shell ~/.tmux/theme.tmux
+run-shell "~/.tmux/run-shell-profile.tmux theme ~/.tmux/theme.tmux"
 
 # Define simple way to run my 't' command
 # (this overrides the stupid clock keybinding)
@@ -67,30 +67,30 @@ set-hook -g client-session-changed 'source-file ~/.tmux.conf'
 # https://github.com/NHDaly/tmux-better-mouse-mode
 set -g @scroll-without-changing-pane on
 set -g @emulate-scroll-for-no-mouse-alternate-buffer on
-run-shell ~/.tmux/plugins/tmux-better-mouse-mode/scroll_copy_mode.tmux
+run-shell "~/.tmux/run-shell-profile.tmux better-mouse ~/.tmux/plugins/tmux-better-mouse-mode/scroll_copy_mode.tmux"
 
 # Easy logging and screen capturing
 # https://github.com/tmux-plugins/tmux-logging
-run-shell ~/.tmux/plugins/tmux-logging/logging.tmux
+run-shell "~/.tmux/run-shell-profile.tmux logging ~/.tmux/plugins/tmux-logging/logging.tmux"
 
 # Improved bindings for controlling panes
 # https://github.com/tmux-plugins/tmux-pain-control
-run-shell ~/.tmux/plugins/tmux-pain-control/pain_control.tmux
+run-shell "~/.tmux/run-shell-profile.tmux pain-control ~/.tmux/plugins/tmux-pain-control/pain_control.tmux"
 
 # Enable copying to system clipboard
 # https://github.com/tmux-plugins/tmux-yank
 set -g @override_copy_command '~/bin/clip'
 set -g @yank_with_mouse off
-run-shell ~/.tmux/plugins/tmux-yank/yank.tmux
+run-shell "~/.tmux/run-shell-profile.tmux yank ~/.tmux/plugins/tmux-yank/yank.tmux"
 
 # Really cool enhanced search (with a bunch of pre-defined regexes)
 # Modifies keybindings from tmux-yank so it needs to come after.
 # https://github.com/tmux-plugins/tmux-copycat
-run-shell ~/.tmux/plugins/tmux-copycat/copycat.tmux
+run-shell "~/.tmux/run-shell-profile.tmux copycat ~/.tmux/plugins/tmux-copycat/copycat.tmux"
 
 # Sensible defaults (does not change anything already set above)
 # https://github.com/tmux-plugins/tmux-sensible
-run-shell ~/.tmux/plugins/tmux-sensible/sensible.tmux
+run-shell "~/.tmux/run-shell-profile.tmux sensible ~/.tmux/plugins/tmux-sensible/sensible.tmux"
 
 # Override prefix c to prompt for a new window's name.  If the prompt response
 # is empty, fall back to the default automatic window naming.  This is
