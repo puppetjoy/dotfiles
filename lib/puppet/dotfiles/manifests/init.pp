@@ -1,8 +1,4 @@
 class dotfiles {
-  file { "${facts['basedir']}/.config/systemd/user/x-session.target.wants/urxvtd.service":
-    ensure => absent,
-  }
-
   if $facts['os']['family'] == 'windows' {
     # identity.user may include a machine/domain prefix on Windows (for
     # example "CARACARA\\joy"), so trim everything up to the final slash.

@@ -1,6 +1,8 @@
 <% windows_username = @facts['identity']['user'].to_s.sub(%r{.*[\\/]}, '') -%>
 {
   "$schema": "https://aka.ms/terminal-profiles-schema",
+  "alwaysShowTabs": false,
+  "showTabsInTitlebar": false,
   "defaultProfile": "{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}",
   "profiles": {
     "defaults": {
@@ -8,7 +10,8 @@
         "face": "Hack",
         "size": 10.0
       },
-      "historySize": 100000
+      "historySize": 100000,
+      "padding": 0
     },
     "list": [
       {
