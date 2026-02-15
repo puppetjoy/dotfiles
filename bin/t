@@ -32,6 +32,8 @@ if [[ ! -x $(whence tmux) ]]; then
     exit 1
 fi
 
+tmux_commands=($(TMUX='' tmux list-commands | awk '{ gsub("[()]", "", $2); print $1; print $2 }'))
+
 is_windows_admin() {
     [[ $OS == 'Windows_NT' ]] && id -Gnz | tr '\0' '\n' | grep -q '^Administrators$'
 }
@@ -162,13 +164,8 @@ fi
 
 if (( ARGC == 0 )); then
     tmux_new_session "$(default_session_name)"
-elif [[ $1 == -* ]]; then
+elif (( tmux_commands[(I)${1}*] )) || [[ $1 == -* ]]; then
     exec_tmux "$@"
 else
-    tmux_commands=($(TMUX='' tmux list-commands | awk '{ gsub("[()]", "", $2); print $1; print $2 }'))
-    if (( tmux_commands[(I)${1}*] )); then
-        exec_tmux "$@"
-    else
-        tmux_new_session "$@"
-    fi
+    tmux_new_session "$@"
 fi
