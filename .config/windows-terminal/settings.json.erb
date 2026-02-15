@@ -1,3 +1,4 @@
+<% windows_username = @facts['identity']['user'].to_s.sub(%r{.*[\\/]}, '') -%>
 {
   "$schema": "https://aka.ms/terminal-profiles-schema",
   "defaultProfile": "{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}",
@@ -14,7 +15,7 @@
         "guid": "{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}",
         "name": "Cygwin zsh",
         "commandline": "C:/tools/cygwin/bin/zsh.exe -li",
-        "startingDirectory": "C:/tools/cygwin/home/<%= @facts['identity']['user'] %>",
+        "startingDirectory": "C:/tools/cygwin/home/<%= windows_username %>",
         "icon": "C:/tools/cygwin/Cygwin-Terminal.ico",
         "suppressApplicationTitle": true,
         "env": {
