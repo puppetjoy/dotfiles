@@ -10,8 +10,10 @@ fi
 # where it sources /etc/profile.env.  Ensure my environment takes precedence.
 [[ -e /etc/zsh/zprofile ]] && source $HOME/.zshenv
 
-# Override TERM for VS Code. It can't be configured.
-if [[ $TERM_PROGRAM == 'vscode' && $TERM != *-powerline ]]; then
+# Override TERM for terminal emulators that either cannot configure it or may
+# not reliably apply profile env vars before shell startup.
+if [[ ($TERM_PROGRAM == 'vscode' || $TERM_PROGRAM == 'Windows_Terminal' || -n $WT_SESSION) &&
+      $TERM != *-powerline ]]; then
     export TERM="${TERM}-powerline"
 fi
 
