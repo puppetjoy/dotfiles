@@ -93,8 +93,19 @@ refresh_zsh_completion_cache() {
     # Prebuild completion cache on Cygwin so first interactive shell startup
     # remains fast while keeping completion enabled.
     if [[ $OSTYPE == 'cygwin' ]] && command -v zsh > /dev/null; then
-        ZDOTDIR="$HOME" zsh -fc 'autoload -U compinit && compinit -u -d "${ZDOTDIR:-$HOME}/.zcompdump"' > /dev/null 2>&1 || true
-        ZDOTDIR="$HOME" zsh -fc '[[ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]] && zcompile "${ZDOTDIR:-$HOME}/.zcompdump"' > /dev/null 2>&1 || true
+        echo "[refresh] rebuilding zsh completion cache..."
+
+        if ZDOTDIR="$HOME" zsh -fc 'autoload -U compinit && compinit -u -d "${ZDOTDIR:-$HOME}/.zcompdump"' > /dev/null 2>&1 &&
+            ZDOTDIR="$HOME" zsh -fc '
+                dump="${ZDOTDIR:-$HOME}/.zcompdump"
+                if [[ -f "$dump" ]]; then
+                    zcompile "$dump" || exit 1
+                fi
+            ' > /dev/null 2>&1; then
+            echo "[refresh] zsh completion cache refreshed."
+        else
+            echo "[refresh] warning: unable to refresh zsh completion cache; continuing." >&2
+        fi
     fi
 }
 
@@ -152,12 +163,15 @@ branch="$(git rev-parse --abbrev-ref HEAD)"
 
 # Grab latest updates from git and reexec this script
 if [[ -z $no_fetch ]]; then
+    echo "[refresh] fetching updates from origin/${branch}..."
     git fetch
+    echo "[refresh] resetting to origin/${branch} and re-running..."
     git reset --hard "origin/${branch}" && exec "$0" "$@" --no-fetch
 fi
 
 # Process templates with Puppet if we're on the main branch or a clone
 if [[ $branch == 'main' || $PWD != $HOME ]]; then
+    echo "[refresh] rendering templates and applying with Puppet..."
     generate_manifest > "$MANIFEST"
 
     cat >> "$MANIFEST" <<END_SPECIAL
@@ -170,6 +184,7 @@ END_SPECIAL
 
     FACTER_basedir="$BASEDIR" "$PUPPET" apply --modulepath="${BASEDIR}/lib/puppet" "$MANIFEST"
 else
+    echo "[refresh] using preprocessed files; enforcing .ssh/config mode..."
     if command -v "$PUPPET" > /dev/null; then
         "$PUPPET" resource file "${BASEDIR}/.ssh/config" mode=0600
     else
