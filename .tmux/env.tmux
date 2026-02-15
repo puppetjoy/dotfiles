@@ -7,6 +7,12 @@
 # repetitively when the tmux configuration is re-sourced.
 #
 
+# Cygwin does not switch between compositor sessions like Linux desktop hosts.
+# Skip update-environment churn there to reduce startup overhead.
+if [[ $OSTYPE == cygwin* || $OS == Windows_NT ]]; then
+    exit 0
+fi
+
 source "${HOME}/lib/session-vars.sh"
 
 for var in "${SESSION_VARS[@]}"; do
