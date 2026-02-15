@@ -45,6 +45,12 @@
 - Generated files on `main` are usually untracked/ignored unless force-added.
 - If SSH-signed git commit/revert/cherry-pick fails in sandboxed execution (for example `ssh_askpass`/passphrase errors), rerun the git command outside the sandbox via escalated execution.
 
+## Commit Message Guidance
+- For significant changes, use a clear subject plus an explanatory body.
+- Keep the subject concise and scoped (for example `tmux: ...`).
+- In the body, focus on why the change was made and key tradeoffs.
+- Word-wrap body lines to about 72 columns for readability in git tools.
+
 ## Codebase Shape
 - Large portions are vendored third-party content.
 - `lib/puppet/stdlib`, `.tmux/plugins/*`, and Vim plugin trees have git-subtree-style history (squashed upstream commits plus merge commits like `Merge commit '<hash>' as '<path>'`).
