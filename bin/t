@@ -93,6 +93,20 @@ tmux_new_session() {
 
         tmux switch-client -t "$name"
     else
+        local -a socket_name
+        if is_windows_admin; then
+            socket_name=(-L admin)
+        fi
+
+        # On Cygwin/Windows, create the initial session detached before
+        # attaching so closing the launching terminal does not tear down a
+        # freshly started tmux server.
+        if [[ $OSTYPE == 'cygwin' && $# -eq 0 ]] &&
+            ! tmux "${socket_name[@]}" list-sessions > /dev/null 2>&1; then
+            tmux "${socket_name[@]}" new-session -d -s "$name" "$@" &&
+                exec_tmux attach-session -t "$name"
+        fi
+
         exec_tmux new-session -A -s "$name" "$@"
     fi
 }
