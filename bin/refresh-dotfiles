@@ -89,6 +89,15 @@ file_mode() {
     fi
 }
 
+refresh_zsh_completion_cache() {
+    # Prebuild completion cache on Cygwin so first interactive shell startup
+    # remains fast while keeping completion enabled.
+    if [[ $OSTYPE == 'cygwin' ]] && command -v zsh > /dev/null; then
+        ZDOTDIR="$HOME" zsh -fc 'autoload -U compinit && compinit -u -d "${ZDOTDIR:-$HOME}/.zcompdump"' > /dev/null 2>&1 || true
+        ZDOTDIR="$HOME" zsh -fc '[[ -f "${ZDOTDIR:-$HOME}/.zcompdump" ]] && zcompile "${ZDOTDIR:-$HOME}/.zcompdump"' > /dev/null 2>&1 || true
+    fi
+}
+
 generate_manifest() {
     # Create/update dotfiles from templates in git
     git ls-files '*.erb' | while read template; do
@@ -167,3 +176,5 @@ else
         chmod 0600 "${BASEDIR}/.ssh/config"
     fi
 fi
+
+refresh_zsh_completion_cache
