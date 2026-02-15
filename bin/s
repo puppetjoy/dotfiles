@@ -10,10 +10,12 @@
 command=(${(q)argv})
 
 if [[ $OS == 'Windows_NT' ]]; then
+    shell_exe="$(cygpath -am "${SHELL:-/bin/zsh}")"
+
     if [[ $# -eq 0 ]]; then
-        exec cygstart --action=runas mintty -
+        exec cygstart --action=runas wt.exe -p 'Cygwin zsh'
     else
-        exec cygstart --action=runas mintty -e "$SHELL -c ${(qq)command}"
+        exec cygstart --action=runas wt.exe -p 'Cygwin zsh' "$shell_exe" -lc "${(qq)command}"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
     exec sudo -E "${@:--s}"

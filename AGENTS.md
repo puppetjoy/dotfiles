@@ -50,6 +50,8 @@
 - Keep the subject concise and scoped (for example `tmux: ...`).
 - In the body, focus on why the change was made and key tradeoffs.
 - Word-wrap body lines to about 72 columns for readability in git tools.
+- Use a single wrapped paragraph by default; avoid blank lines inside the body
+  unless intentionally separating distinct paragraphs.
 
 ## Codebase Shape
 - Large portions are vendored third-party content.
