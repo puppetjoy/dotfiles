@@ -22,7 +22,7 @@ if [[ $OS == 'Windows_NT' ]]; then
     if [[ $# -eq 0 ]]; then
         exec cygstart --action=runas wt.exe --profile "$wt_profile_shell"
     else
-        command_string="env NO_AUTO_TMUX=1 ${(j: :)quoted_command}"
+        command_string="${(j: :)quoted_command}"
         exec cygstart --action=runas wt.exe --profile "$wt_profile_command" "$shell_exe" -ilc "$command_string"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
