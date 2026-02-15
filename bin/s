@@ -10,12 +10,18 @@
 command=(${(q)argv})
 
 if [[ $OS == 'Windows_NT' ]]; then
-    shell_exe="$(cygpath -am "${SHELL:-/bin/zsh}")"
+    shell_path="${SHELL:-/bin/zsh}"
+    if [[ $shell_path != *.exe && -x "${shell_path}.exe" ]]; then
+        shell_path="${shell_path}.exe"
+    fi
+
+    shell_exe="$(cygpath -am "$shell_path")"
+    wt_profile='{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}'
 
     if [[ $# -eq 0 ]]; then
-        exec cygstart --action=runas wt.exe -p 'Cygwin zsh'
+        exec cygstart --action=runas wt.exe --profile "$wt_profile"
     else
-        exec cygstart --action=runas wt.exe -p 'Cygwin zsh' "$shell_exe" -lc "${(qq)command}"
+        exec cygstart --action=runas wt.exe --profile "$wt_profile" "$shell_exe" -lc "${(qq)command}"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
     exec sudo -E "${@:--s}"

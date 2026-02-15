@@ -50,8 +50,12 @@
 - Keep the subject concise and scoped (for example `tmux: ...`).
 - In the body, focus on why the change was made and key tradeoffs.
 - Word-wrap body lines to about 72 columns for readability in git tools.
+- Use hard line breaks in the message file so body text is physically wrapped
+  (do not rely on viewer soft-wrapping).
 - Use a single wrapped paragraph by default; avoid blank lines inside the body
   unless intentionally separating distinct paragraphs.
+- When a body is included, write the message to a file and run `git commit -F`
+  (or `git commit --amend -F`) instead of stacking multiple `-m` flags.
 
 ## Codebase Shape
 - Large portions are vendored third-party content.
