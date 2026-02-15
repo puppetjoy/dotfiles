@@ -7,7 +7,7 @@
 #
 
 # quote each command argument
-command=(${(q)argv})
+quoted_command=(${(q)argv})
 
 if [[ $OS == 'Windows_NT' ]]; then
     shell_path="${SHELL:-/bin/zsh}"
@@ -16,12 +16,14 @@ if [[ $OS == 'Windows_NT' ]]; then
     fi
 
     shell_exe="$(cygpath -am "$shell_path")"
-    wt_profile='{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}'
+    wt_profile_shell='{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}'
+    wt_profile_command='{d5dbf8f2-3cea-4f62-8d88-4ba4f43cf6ca}'
 
     if [[ $# -eq 0 ]]; then
-        exec cygstart --action=runas wt.exe --profile "$wt_profile"
+        exec cygstart --action=runas wt.exe --profile "$wt_profile_shell"
     else
-        exec cygstart --action=runas wt.exe --profile "$wt_profile" "$shell_exe" -lc "${(qq)command}"
+        command_string="${(qq)quoted_command}"
+        exec cygstart --action=runas wt.exe --profile "$wt_profile_command" "$shell_exe" -ilc "$command_string"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
     exec sudo -E "${@:--s}"
