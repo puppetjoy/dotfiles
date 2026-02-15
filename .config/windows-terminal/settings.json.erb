@@ -1,0 +1,26 @@
+{
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "defaultProfile": "{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}",
+  "profiles": {
+    "defaults": {
+      "font": {
+        "face": "Hack",
+        "size": 10.0
+      },
+      "historySize": 100000
+    },
+    "list": [
+      {
+        "guid": "{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}",
+        "name": "Cygwin zsh",
+        "commandline": "C:/tools/cygwin/bin/zsh.exe -li",
+        "startingDirectory": "C:/tools/cygwin/home/<%= @facts['identity']['user'] %>",
+        "icon": "C:/tools/cygwin/Cygwin-Terminal.ico",
+        "suppressApplicationTitle": true,
+        "env": {
+          "TERM": "xterm-256color-powerline"
+        }
+      }
+    ]
+  }
+}
