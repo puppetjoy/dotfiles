@@ -112,12 +112,7 @@ prompt mine
 
 # Enable command autocompletion
 autoload -U compinit
-if [[ $OSTYPE == 'cygwin' ]]; then
-    # On Cygwin, use prebuilt completion cache for fast startup.
-    compinit -C -u
-else
-    compinit -u
-fi
+compinit -u
 
 # Color list autocompletion
 if whence dircolors > /dev/null; then
