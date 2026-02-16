@@ -1,0 +1,26 @@
+/*
+ * Fix context menu position on xmonad
+ * See: https://www.reddit.com/r/firefox/comments/672ef7/rightclick_menu_open_under_mouse_cursor/?st=j8gt6u78&sh=c59dd405
+ */
+@supports -moz-bool-pref("nest.contextMenuOffsetTweak") {
+    #contentAreaContextMenu { margin: 0 !important }
+}
+
+/*
+ * Accent color selection changed in Firefox 87
+ * Restore blue accent color to tabs and the urlbar
+ * See: https://bugzilla.mozilla.org/show_bug.cgi?id=1703679
+ */
+:root {
+    --toolbar-field-focus-border-color: highlight !important;
+    --toolbarbutton-icon-fill-attention: highlight !important;
+}
+
+#tabbrowser-tabs {
+    --tab-line-color: highlight !important;
+}
+
+/* Hide ugly container tab highlight line */
+tab {
+    --identity-icon-color: transparent !important;
+}
