@@ -1,5 +1,14 @@
-# Always use unicode
-export LANG=en_US.UTF-8
+# Always use a locale that supports unicode
+if command -v locale >/dev/null 2>&1; then
+    locales="$(locale -a 2>/dev/null)"
+    if print -r -- "$locales" | grep -Eiq '^en_US\.utf-?8$'; then
+        LANG=en_US.UTF-8
+    elif print -r -- "$locales" | grep -Eiq '^C\.utf-?8$'; then
+        LANG=C.UTF-8
+    fi
+    unset locales
+fi
+export LANG="${LANG:-C}"
 
 # Set path
 typeset -U path
