@@ -7,22 +7,12 @@
 #
 
 if [[ $OS == 'Windows_NT' ]]; then
-    shell_path="${SHELL:-/bin/zsh}"
-    if [[ $shell_path != *.exe && -x "${shell_path}.exe" ]]; then
-        shell_path="${shell_path}.exe"
-    fi
-
-    shell_exe="$(cygpath -am "$shell_path")"
-    exec_argv_script="$(cygpath -am "$HOME/bin/exec-argv")"
-    wt_profile_shell='{6c6d2be2-a7a8-4a38-bf3b-d0dd57f53af2}'
-    wt_profile_command='{d5dbf8f2-3cea-4f62-8d88-4ba4f43cf6ca}'
-
+    # quote each command argument
+    command=(${(q)argv})
     if [[ $# -eq 0 ]]; then
-        exec cygstart --action=runas wt.exe --profile "$wt_profile_shell"
+        exec cygstart --action=runas mintty -
     else
-        exec cygstart --action=runas wt.exe \
-            --profile "$wt_profile_command" \
-            "$shell_exe" -il "$exec_argv_script" "$@"
+        exec cygstart --action=runas mintty -e "$SHELL -c ${(qq)command}"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
     exec sudo -E "${@:--s}"

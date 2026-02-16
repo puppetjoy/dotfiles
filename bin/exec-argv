@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-#
-# Execute all arguments as a command preserving argument boundaries.
-#
-
-exec "$@"
