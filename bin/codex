@@ -1,0 +1,26 @@
+#!/usr/bin/env zsh
+#
+# codex
+#
+# Wrapper around Codex CLI that defaults the TUI syntax theme to "mine"
+# without relying on mutable ~/.codex/config.toml state.
+#
+
+self="${0:A}"
+real_codex=''
+
+for dir in ${(s/:/)PATH}; do
+    [[ -z $dir ]] && dir='.'
+    candidate="${dir}/codex"
+    [[ -x $candidate ]] || continue
+    [[ "${candidate:A}" == "$self" ]] && continue
+    real_codex="$candidate"
+    break
+done
+
+if [[ -z $real_codex ]]; then
+    echo "codex wrapper: could not find upstream codex in PATH" >&2
+    exit 127
+fi
+
+exec "$real_codex" -c 'tui.theme="mine"' "$@"
