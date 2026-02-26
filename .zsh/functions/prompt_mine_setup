@@ -1,0 +1,336 @@
+#
+# prompt_mine
+#
+# A custom Powerline-style prompt that dynamically shows information as
+# needed to ensure the most important context information in the least
+# amount of space as possible.
+#
+
+prompt_mine_separator() {
+    local bg=$1
+
+    if [[ -n $sep_fg ]]; then
+        if [[ $flat != true ]]; then
+            if [[ $sep_fg == $bg ]]; then
+                print -n "%{${mycolors_bg[$bg]}${mycolors_fg[base01]}%}%{${reset_color}%}"
+            else
+                print -n "%{${mycolors_bg[$bg]}${mycolors_fg[$sep_fg]}%}%{${reset_color}%}"
+            fi
+        fi
+    fi
+
+    sep_fg=$bg
+}
+
+prompt_mine_segment() {
+    local content=$1
+    local bg=$2
+    local fg=$3
+    local bold=$4
+
+    if [[ $flat == true && -z $content ]]; then
+        content='>'
+        fg=$bg
+        bg=default
+        bold=true
+    fi
+
+    prompt_mine_separator $bg
+    [[ -n $bold ]] && print -n '%B'
+    print -n "%{${mycolors_bg[$bg]}${mycolors_fg[$fg]}%}${content}%{${reset_color}%}"
+    [[ -n $bold ]] && print -n '%b'
+}
+
+prompt_mine_x() {
+    local old_display="$DISPLAY"
+
+    if [[ $TMUX ]]; then
+        eval "$(tmux show-environment -s DISPLAY 2>/dev/null)"
+        if [[ $old_display != $DISPLAY ]]; then
+            prompt_mine_segment ' X ' red base01 bold
+        fi
+    fi
+}
+
+prompt_mine_username() {
+    if [[ ! $(print -P '%n') =~ $hide_users ]]; then
+        prompt_mine_segment ' %n ' blue base01 bold
+    fi
+}
+
+prompt_mine_hostinfo() {
+    local content='%m'
+
+    # If the desired segment background color (base02) is different from the
+    # terminal background, pad the segment with spaces:
+    if [[ ${mycolors_bg[base02]} != ${mycolors_bg[base00]} ]]; then
+        content=" ${content} "
+    fi
+
+    if [[ -n $SSH_CONNECTION ]]; then
+        prompt_mine_segment $content base02 default bold
+    fi
+}
+
+prompt_mine_cwd() {
+    local cwd=$1
+    local formatted
+    local -a components
+
+    # Split at /
+    components=(${(s:/:)cwd})
+
+    if [[ ${#components} > 1 ]]; then
+        if [[ ${components[1]} != '~' ]]; then
+            formatted='/'
+        fi
+
+        formatted+="${(j:/:)components[1,-2]}/%B${components[-1]}"
+    else
+        formatted="%B${cwd}"
+    fi
+
+    prompt_mine_segment " ${formatted} " base01
+
+    # unset bold
+    print -n '%b'
+}
+
+prompt_mine_ro() {
+    local content
+
+    if [[ $flat == true ]]; then
+        content=" RO "
+    else
+        content="  "
+    fi
+
+    if [[ ! -w . ]]; then
+        prompt_mine_segment $content yellow base01
+    fi
+}
+
+prompt_mine_bg() {
+    if [[ ${#jobstates} > 0 ]]; then
+        prompt_mine_segment ' %j ' green base01
+    fi
+}
+
+prompt_mine_userinfo() {
+    if [[ $root == true ]]; then
+        prompt_mine_segment '' red
+    fi
+
+    if [[ $admin == true ]]; then
+        prompt_mine_segment '' base09
+    fi
+}
+
+prompt_mine_vimode() {
+    if [[ $KEYMAP = 'vicmd' ]]; then
+        prompt_mine_segment '' blue
+    else
+        prompt_mine_segment '' green
+    fi
+}
+
+prompt_mine_end() {
+    prompt_mine_separator
+}
+
+prompt_mine_build_prompt() {
+    prompt_mine_x
+    prompt_mine_username
+    prompt_mine_hostinfo
+    prompt_mine_cwd $uniq_cwd
+    prompt_mine_ro
+    prompt_mine_bg
+    prompt_mine_userinfo
+    prompt_mine_vimode
+    prompt_mine_end
+}
+
+prompt_mine_disambiguate_cwd() {
+    disambiguate -k "$(print -P "%~")"
+    uniq_cwd=$REPLY
+}
+
+prompt_mine_precmd() {
+    local admin_title
+
+    if [[ $admin == true ]]; then
+        admin_title='/admin'
+    fi
+
+    # Set terminal title
+    case $TERM in
+        alacritty*|foot*|rxvt*|xterm*|screen*|tmux*)
+            print -Pn "\e]0;%n${admin_title}@%m:${uniq_cwd}\a"
+            ;;
+    esac
+
+    PROMPT="$(prompt_mine_build_prompt) "
+}
+
+function zle-keymap-select {
+    PROMPT="$(prompt_mine_build_prompt) "
+    zle reset-prompt
+}
+
+prompt_mine_setup() {
+    autoload -U disambiguate
+    autoload -U colors && colors
+
+    typeset -Ax mycolors_bg mycolors_fg
+    mycolors_bg=(${(kv)bg})
+    mycolors_fg=(${(kv)fg})
+
+    if [[ $TERM == *truecolor* ]]; then
+        mycolors_bg[base00]="\e[48;2;0;0;0m"
+        mycolors_fg[base00]="\e[38;2;0;0;0m"
+        mycolors_bg[base01]="\e[48;2;40;40;40m"
+        mycolors_fg[base01]="\e[38;2;40;40;40m"
+        mycolors_bg[base02]="\e[48;2;56;56;56m"
+        mycolors_fg[base02]="\e[38;2;56;56;56m"
+        mycolors_bg[base03]="\e[48;2;88;88;88m"
+        mycolors_fg[base03]="\e[38;2;88;88;88m"
+        mycolors_bg[base04]="\e[48;2;184;184;184m"
+        mycolors_fg[base04]="\e[38;2;184;184;184m"
+        mycolors_bg[base05]="\e[48;2;216;216;216m"
+        mycolors_fg[base05]="\e[38;2;216;216;216m"
+        mycolors_bg[base06]="\e[48;2;232;232;232m"
+        mycolors_fg[base06]="\e[38;2;232;232;232m"
+        mycolors_bg[base07]="\e[48;2;248;248;248m"
+        mycolors_fg[base07]="\e[38;2;248;248;248m"
+        mycolors_bg[base08]="\e[48;2;171;70;66m"
+        mycolors_fg[base08]="\e[38;2;171;70;66m"
+        mycolors_bg[base09]="\e[48;2;220;150;86m"
+        mycolors_fg[base09]="\e[38;2;220;150;86m"
+        mycolors_bg[base0A]="\e[48;2;247;202;136m"
+        mycolors_fg[base0A]="\e[38;2;247;202;136m"
+        mycolors_bg[base0B]="\e[48;2;161;181;108m"
+        mycolors_fg[base0B]="\e[38;2;161;181;108m"
+        mycolors_bg[base0C]="\e[48;2;134;193;185m"
+        mycolors_fg[base0C]="\e[38;2;134;193;185m"
+        mycolors_bg[base0D]="\e[48;2;124;175;194m"
+        mycolors_fg[base0D]="\e[38;2;124;175;194m"
+        mycolors_bg[base0E]="\e[48;2;186;139;175m"
+        mycolors_fg[base0E]="\e[38;2;186;139;175m"
+        mycolors_bg[base0F]="\e[48;2;161;105;70m"
+        mycolors_fg[base0F]="\e[38;2;161;105;70m"
+    elif [[ $terminfo[colors] -ge 256 ]]; then
+        mycolors_bg[base00]="\e[48;5;0m"
+        mycolors_fg[base00]="\e[38;5;0m"
+        mycolors_bg[base01]="\e[48;5;18m"
+        mycolors_fg[base01]="\e[38;5;18m"
+        mycolors_bg[base02]="\e[48;5;19m"
+        mycolors_fg[base02]="\e[38;5;19m"
+        mycolors_bg[base03]="\e[48;5;8m"
+        mycolors_fg[base03]="\e[38;5;8m"
+        mycolors_bg[base04]="\e[48;5;20m"
+        mycolors_fg[base04]="\e[38;5;20m"
+        mycolors_bg[base05]="\e[48;5;7m"
+        mycolors_fg[base05]="\e[38;5;7m"
+        mycolors_bg[base06]="\e[48;5;21m"
+        mycolors_fg[base06]="\e[38;5;21m"
+        mycolors_bg[base07]="\e[48;5;15m"
+        mycolors_fg[base07]="\e[38;5;15m"
+        mycolors_bg[base08]="\e[48;5;1m"
+        mycolors_fg[base08]="\e[38;5;1m"
+        mycolors_bg[base09]="\e[48;5;16m"
+        mycolors_fg[base09]="\e[38;5;16m"
+        mycolors_bg[base0A]="\e[48;5;3m"
+        mycolors_fg[base0A]="\e[38;5;3m"
+        mycolors_bg[base0B]="\e[48;5;2m"
+        mycolors_fg[base0B]="\e[38;5;2m"
+        mycolors_bg[base0C]="\e[48;5;6m"
+        mycolors_fg[base0C]="\e[38;5;6m"
+        mycolors_bg[base0D]="\e[48;5;4m"
+        mycolors_fg[base0D]="\e[38;5;4m"
+        mycolors_bg[base0E]="\e[48;5;5m"
+        mycolors_fg[base0E]="\e[38;5;5m"
+        mycolors_bg[base0F]="\e[48;5;17m"
+        mycolors_fg[base0F]="\e[38;5;17m"
+    elif [[ $terminfo[colors] -ge 16 ]]; then
+        mycolors_bg[base00]="\e[48;5;0m"
+        mycolors_fg[base00]="\e[38;5;0m"
+        mycolors_bg[base01]="\e[48;5;0m"
+        mycolors_fg[base01]="\e[38;5;0m"
+        mycolors_bg[base02]="\e[48;5;0m"
+        mycolors_fg[base02]="\e[38;5;0m"
+        mycolors_bg[base03]="\e[48;5;8m"
+        mycolors_fg[base03]="\e[38;5;8m"
+        mycolors_bg[base04]="\e[48;5;7m"
+        mycolors_fg[base04]="\e[38;5;7m"
+        mycolors_bg[base05]="\e[48;5;7m"
+        mycolors_fg[base05]="\e[38;5;7m"
+        mycolors_bg[base06]="\e[48;5;15m"
+        mycolors_fg[base06]="\e[38;5;15m"
+        mycolors_bg[base07]="\e[48;5;15m"
+        mycolors_fg[base07]="\e[38;5;15m"
+        mycolors_bg[base08]="\e[48;5;1m"
+        mycolors_fg[base08]="\e[38;5;1m"
+        mycolors_bg[base09]="\e[48;5;3m"
+        mycolors_fg[base09]="\e[38;5;3m"
+        mycolors_bg[base0A]="\e[48;5;3m"
+        mycolors_fg[base0A]="\e[38;5;3m"
+        mycolors_bg[base0B]="\e[48;5;2m"
+        mycolors_fg[base0B]="\e[38;5;2m"
+        mycolors_bg[base0C]="\e[48;5;6m"
+        mycolors_fg[base0C]="\e[38;5;6m"
+        mycolors_bg[base0D]="\e[48;5;4m"
+        mycolors_fg[base0D]="\e[38;5;4m"
+        mycolors_bg[base0E]="\e[48;5;5m"
+        mycolors_fg[base0E]="\e[38;5;5m"
+        mycolors_bg[base0F]="\e[48;5;8m"
+        mycolors_fg[base0F]="\e[38;5;8m"
+    else
+        mycolors_bg[base00]="\e[48;5;0m"
+        mycolors_fg[base00]="\e[38;5;0m"
+        mycolors_bg[base01]="\e[48;5;0m"
+        mycolors_fg[base01]="\e[38;5;0m"
+        mycolors_bg[base02]="\e[48;5;0m"
+        mycolors_fg[base02]="\e[38;5;0m"
+        mycolors_bg[base03]="\e[48;5;0m"
+        mycolors_fg[base03]="\e[38;5;0m"
+        mycolors_bg[base04]="\e[48;5;7m"
+        mycolors_fg[base04]="\e[38;5;7m"
+        mycolors_bg[base05]="\e[48;5;7m"
+        mycolors_fg[base05]="\e[38;5;7m"
+        mycolors_bg[base06]="\e[48;5;7m"
+        mycolors_fg[base06]="\e[38;5;7m"
+        mycolors_bg[base07]="\e[48;5;7m"
+        mycolors_fg[base07]="\e[38;5;7m"
+        mycolors_bg[base08]="\e[48;5;1m"
+        mycolors_fg[base08]="\e[38;5;1m"
+        mycolors_bg[base09]="\e[48;5;3m"
+        mycolors_fg[base09]="\e[38;5;3m"
+        mycolors_bg[base0A]="\e[48;5;3m"
+        mycolors_fg[base0A]="\e[38;5;3m"
+        mycolors_bg[base0B]="\e[48;5;2m"
+        mycolors_fg[base0B]="\e[38;5;2m"
+        mycolors_bg[base0C]="\e[48;5;6m"
+        mycolors_fg[base0C]="\e[38;5;6m"
+        mycolors_bg[base0D]="\e[48;5;4m"
+        mycolors_fg[base0D]="\e[38;5;4m"
+        mycolors_bg[base0E]="\e[48;5;5m"
+        mycolors_fg[base0E]="\e[38;5;5m"
+        mycolors_bg[base0F]="\e[48;5;0m"
+        mycolors_fg[base0F]="\e[38;5;0m"
+    fi
+
+    zstyle -s ':prompt:mine' hide-users hide_users
+    zstyle -s ':prompt:mine' root root
+    zstyle -s ':prompt:mine' admin admin
+    zstyle -s ':prompt:mine' flat flat
+
+    prompt_mine_disambiguate_cwd
+
+    add-zsh-hook precmd prompt_mine_precmd
+    add-zsh-hook chpwd prompt_mine_disambiguate_cwd
+    zle -N zle-keymap-select
+}
+
+prompt_mine_setup "$@"
+
+# vim: filetype=zsh

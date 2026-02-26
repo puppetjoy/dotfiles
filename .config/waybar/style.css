@@ -1,0 +1,25 @@
+* {
+    all: unset;
+}
+
+#waybar {
+    background-color: black;
+    color: #d8d8d8;
+    font-family: monospace;
+    font-size: 9pt;
+}
+
+#custom-window {
+    font-family: sans-serif;
+    font-weight: 500;
+}
+
+.windows menu {
+    font-weight: normal;
+    padding: 0.3em;
+}
+
+#clock {
+    background-color: #383838;
+    margin: 2px 0 2px 0;
+}
