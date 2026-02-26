@@ -68,6 +68,7 @@
 - Most scripts are `zsh` and use zsh-specific features.
 - Bash scripts: `bin/refresh-dotfiles`, `bin/ssh`.
 - Ruby scripts: `bin/pdeathsig`, `bin/sway-layout-manager`, `bin/taffybar-status`, `lib/ruby/status.rb.erb`.
+- Prefer comment lines without trailing punctuation unless needed for clarity.
 
 ## Safe Working Pattern
 1. Edit `*.erb` sources on `main`, not generated outputs.
