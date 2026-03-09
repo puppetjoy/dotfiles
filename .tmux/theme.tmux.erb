@@ -9,8 +9,13 @@
 # The theme is loosely modeled off of my custom Vim Airline tabline theme.
 #
 
-# Grab and export the current outside TERM variable.
-eval $(tmux show-environment -gs TERM)
+# Prefer the active client TERM so attach-time terminal changes take effect
+TERM=$(tmux display-message -p '#{client_termname}' 2>/dev/null)
+
+# Fall back to the stored session TERM when there is no active client
+if [[ -z $TERM ]]; then
+    eval $(tmux show-environment -gs TERM)
+fi
 
 tmux_term='tmux'
 
