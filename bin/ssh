@@ -22,8 +22,8 @@ script_dir="$(cd "$(dirname "$0")" && pwd)"
 PATH="$(path_remove "$PATH" "$script_dir")"
 
 cleanup_terminal() {
-    # Disable common terminal modes that can get left enabled on disconnect.
-    printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1005l\033[?1006l\033[?1015l\033[?1016l\033[?2004l\033[?25h' \
+    # Disable common terminal and tmux modes that can get left enabled on disconnect.
+    printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1005l\033[?1006l\033[?1015l\033[?1016l\033[?2004l\033[?2031l\033[?25h' \
         > /dev/tty 2>/dev/null || true
 }
 
