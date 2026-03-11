@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 #
-# SSH wrapper to handle EC2 internal hostnames
-#
-# Detect attempts to ssh to hosts with EC2 internal hostnames and let them
-# resolve to the correct IP address with a temporary "hosts" file and
-# nss_wrapper (https://cwrap.org/nss_wrapper.html).  This takes care to
-# preserve functionality like SSH ProxyJump and GSSAPI authentication.
+# SSH wrapper to restore the terminal after the session exits
 #
 
 # Removes an entry from a colon separated path string and prints the result.
@@ -26,29 +21,14 @@ path_remove() {
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 PATH="$(path_remove "$PATH" "$script_dir")"
 
-# Don't try to parse the target hostname from the command line--there are too
-# many ways it could be specified, including in the SSH config file, and too
-# many ways it could be tripped up.  Instead, use the '-G' option to grab the
-# exact hostname SSH will use from the machine-readable output after parsing
-# the SSH config.
-#
-# Older versions of OpenSSH don't have the '-G' option in which case this
-# variable will be empty and fall through to the default case in the next
-# conditional.
-hostname="$(ssh -G "$@" 2>/dev/null | awk '$1 == "hostname" { print $2 }')"
+cleanup_terminal() {
+    # Disable common terminal modes that can get left enabled on disconnect.
+    printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1005l\033[?1006l\033[?1015l\033[?1016l\033[?2004l\033[?25h' \
+        > /dev/tty 2>/dev/null || true
+}
 
-if [[ $hostname == *.internal ]]; then
-    ip="$(sed 's/ip-\([[:digit:]]\+\)-\([[:digit:]]\+\)-\([[:digit:]]\+\)-\([[:digit:]]\+\).*/\1.\2.\3.\4/' <<< "$hostname")"
+ssh "$@"
+ssh_status=$?
 
-    temp_hosts="$(mktemp)"
-    trap "rm -f '${temp_hosts}'" EXIT
-    echo "${ip} ${hostname}" > "$temp_hosts"
-
-    # Run SSH with a temporary hosts file, but do not "exec" it to ensure that
-    # control will return to bash to cleanup the temp_hosts file.  The extra
-    # 'HostName' option is needed so the proxy knows what host to connect to
-    # when using the ProxyJump option.
-    LD_PRELOAD='libnss_wrapper.so' NSS_WRAPPER_HOSTS="$temp_hosts" ssh -o "HostName=${ip}" "$@"
-else
-    exec ssh "$@"
-fi
+cleanup_terminal
+exit "$ssh_status"
