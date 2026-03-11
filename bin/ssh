@@ -21,10 +21,26 @@ path_remove() {
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 PATH="$(path_remove "$PATH" "$script_dir")"
 
+disable_private_mode() {
+    # DEC private mode reset: CSI ? Ps l
+    printf '\033[?%sl' "$1"
+}
+
 cleanup_terminal() {
-    # Disable common terminal and tmux modes that can get left enabled on disconnect.
-    printf '\033[?1000l\033[?1002l\033[?1003l\033[?1004l\033[?1005l\033[?1006l\033[?1015l\033[?1016l\033[?2004l\033[?2031l\033[?25h' \
-        > /dev/tty 2>/dev/null || true
+    local mode
+
+    # Disable modes that can get left enabled on disconnect.
+    # 1000/1002/1003/1005/1006/1015/1016 are mouse tracking variants.
+    # 1004 is focus reporting, 2004 is bracketed paste, and 2031 is
+    # terminal theme notifications used by tmux.
+    {
+        for mode in 1000 1002 1003 1004 1005 1006 1015 1016 2004 2031; do
+            disable_private_mode "$mode"
+        done
+
+        # Ensure the cursor is visible again.
+        printf '\033[?25h'
+    } > /dev/tty 2>/dev/null || true
 }
 
 ssh "$@"
