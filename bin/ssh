@@ -28,6 +28,14 @@ disable_private_mode() {
 
 cleanup_terminal() {
     local mode
+    local tty_fd
+
+    # Non-interactive callers may not have a controlling terminal.
+    if ! [[ -t 0 || -t 1 || -t 2 ]]; then
+        return
+    fi
+
+    { exec {tty_fd}>/dev/tty; } 2>/dev/null || return
 
     # Disable modes that can get left enabled on disconnect.
     # 1000/1002/1003/1005/1006/1015/1016 are mouse tracking variants.
@@ -40,7 +48,9 @@ cleanup_terminal() {
 
         # Ensure the cursor is visible again.
         printf '\033[?25h'
-    } > /dev/tty 2>/dev/null || true
+    } >&$tty_fd
+
+    exec {tty_fd}>&-
 }
 
 ssh "$@"
