@@ -61,14 +61,6 @@ export QT_QPA_PLATFORMTHEME=kde
 # To find my custom ruby libraries
 export RUBYLIB="${HOME}/lib/ruby"
 
-# Don't mess with system gems
-<%
-gem_home = `ruby -e 'puts Gem.user_dir'`.chomp
-gem_home = `cygpath '#{gem_home}'`.chomp if RUBY_PLATFORM =~ /(cygwin|mingw32)/
--%>
-export GEM_HOME='<%= gem_home %>'
-path=($path "${GEM_HOME}/bin")
-
 # XXX: Experimental settings
 export MOZ_DBUS_REMOTE=1
 export PAN_MESA_DEBUG=gl3
