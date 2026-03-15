@@ -6,9 +6,8 @@ if ! is-at-least 5.2; then
     done
 fi
 
-# /etc/zsh/zprofile overwrites stuff set in .zshenv, specifically on Gentoo
-# where it sources /etc/profile.env.  Ensure my environment takes precedence.
-[[ -e /etc/zsh/zprofile ]] && source $HOME/.zshenv
+# Re-assert environment after system zprofile modifications
+source "$HOME/.zshenv"
 
 # Override TERM for Windows Terminal so tmux can match truecolor support
 if [[ $WT_SESSION && $TERM == xterm-256color* && $TERM != *truecolor* ]]; then
