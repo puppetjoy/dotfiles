@@ -12,7 +12,7 @@ export LANG="${LANG:-C}"
 
 # Set path
 typeset -U path
-for dir in /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin /usr/glue/bin /usr/glue/sbin $HOME/bin $HOME/local/bin $HOME/.local/bin $HOME/streamux/bin; do
+for dir in /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin /opt/homebrew/opt/ruby/bin $HOME/bin $HOME/local/bin $HOME/.local/bin $HOME/streamux/bin; do
     [[ -e $dir ]] && path=($dir $path)
 done
 
