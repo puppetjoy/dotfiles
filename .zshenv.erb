@@ -10,22 +10,51 @@ if command -v locale >/dev/null 2>&1; then
 fi
 export LANG="${LANG:-C}"
 
+<%
+path_dirs = [
+  '/bin',
+  '/sbin',
+  '/usr/bin',
+  '/usr/sbin',
+  '/opt/homebrew/bin',
+  '/opt/homebrew/sbin',
+  '/opt/homebrew/opt/ruby/bin',
+  '/usr/local/bin',
+  '/usr/local/sbin',
+  '$HOME/bin',
+  '$HOME/local/bin',
+  '$HOME/.local/bin',
+  '$HOME/streamux/bin',
+]
+
+render_path = ENV.fetch('PATH', '').split(File::PATH_SEPARATOR)
+path_dirs.each do |dir|
+    expanded_dir = dir.gsub('$HOME', ENV.fetch('HOME'))
+    next unless File.exist?(expanded_dir)
+
+    render_path.delete(expanded_dir)
+    render_path.unshift(expanded_dir)
+end
+
+ruby = render_path
+    .map { |dir| File.join(dir, 'ruby') }
+    .find { |candidate| File.file?(candidate) && File.executable?(candidate) }
+
+gem_home = if ruby
+    IO.popen([ruby, '-e', 'print Gem.user_dir'], &:read).chomp
+else
+    `ruby -e 'print Gem.user_dir'`.chomp
+end
+
+gem_home = `cygpath '#{gem_home}'`.chomp if RUBY_PLATFORM =~ /(cygwin|mingw32)/
+-%>
+
 # Set path
 typeset -U path
 for dir in \
-    /bin \
-    /sbin \
-    /usr/bin \
-    /usr/sbin \
-    /opt/homebrew/bin \
-    /opt/homebrew/sbin \
-    /opt/homebrew/opt/ruby/bin \
-    /usr/local/bin \
-    /usr/local/sbin \
-    $HOME/bin \
-    $HOME/local/bin \
-    $HOME/.local/bin \
-    $HOME/streamux/bin
+<% path_dirs.each do |dir| -%>
+    <%= dir %> \
+<% end -%>
 do
     [[ -e $dir ]] && path=($dir $path)
 done
@@ -77,10 +106,6 @@ export QT_QPA_PLATFORMTHEME=kde
 export RUBYLIB="${HOME}/lib/ruby"
 
 # Don't mess with system gems
-<%
-gem_home = `ruby -e 'puts Gem.user_dir'`.chomp
-gem_home = `cygpath '#{gem_home}'`.chomp if RUBY_PLATFORM =~ /(cygwin|mingw32)/
--%>
 export GEM_HOME='<%= gem_home %>'
 path=($path "${GEM_HOME}/bin")
 
