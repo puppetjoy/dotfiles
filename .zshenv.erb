@@ -52,8 +52,8 @@ gem_home = `cygpath '#{gem_home}'`.chomp if RUBY_PLATFORM =~ /(cygwin|mingw32)/
 # Set path
 typeset -U path
 for dir in \
-<% path_dirs.each do |dir| -%>
-    <%= dir %> \
+<% path_dirs.each_with_index do |dir, index| -%>
+    <%= dir %><%= ' \\' unless index == path_dirs.length - 1 %>
 <% end -%>
 do
     [[ -e $dir ]] && path=($dir $path)
