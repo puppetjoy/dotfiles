@@ -39,11 +39,11 @@ elif [[ $TERM == 'linux' && -o login && ! $SSH_CONNECTION ]]; then
     clear
 fi
 
-# Run tmux if it's not running.  I don't exec 't' because if tmux is
-# unavailable, then it will return a non-zero exit code and zsh will
-# continue as a fallback; and when tmux does run and exits cleanly, I
-# still want ~/.zlogout evaluated.
-if [[ ! $TMUX ]]; then
+# Run tmux if it's not running, except in Codex shells.  I don't exec
+# 't' because if tmux is unavailable, then it will return a non-zero
+# exit code and zsh will continue as a fallback; and when tmux does run
+# and exits cleanly, I still want ~/.zlogout evaluated.
+if [[ ! $TMUX && $CODEX_SHELL != 1 ]]; then
     t 2>/dev/null && exit
 fi
 
