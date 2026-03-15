@@ -12,7 +12,21 @@ export LANG="${LANG:-C}"
 
 # Set path
 typeset -U path
-for dir in /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin /opt/homebrew/opt/ruby/bin $HOME/bin $HOME/local/bin $HOME/.local/bin $HOME/streamux/bin; do
+for dir in \
+    /bin \
+    /sbin \
+    /usr/bin \
+    /usr/sbin \
+    /opt/homebrew/bin \
+    /opt/homebrew/sbin \
+    /opt/homebrew/opt/ruby/bin \
+    /usr/local/bin \
+    /usr/local/sbin \
+    $HOME/bin \
+    $HOME/local/bin \
+    $HOME/.local/bin \
+    $HOME/streamux/bin
+do
     [[ -e $dir ]] && path=($dir $path)
 done
 
@@ -23,6 +37,7 @@ fi
 
 # Load extra functions
 typeset -U fpath
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fpath=("$HOME/.zsh/functions" $fpath)
 
 # Editor is vim if it exists
