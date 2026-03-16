@@ -1,10 +1,9 @@
 <% require 'colorscheme'
 cs = ColorScheme.dark
-colors = cs.terminal
-text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1 -%>
+colors = cs.terminal -%>
 BoldAsFont=yes
 Font=Hack
-FontHeight=<%= (9 * text_scaling_factor).round %>
+FontHeight=9
 Term=mintty-powerline
 CursorType=block
 Scrollbar=none
