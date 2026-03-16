@@ -7,12 +7,15 @@
 #
 
 if [[ $OS == 'Windows_NT' ]]; then
-    # quote each command argument
-    command=(${(q)argv})
+    alacritty=$(whence -p alacritty.exe 2>/dev/null)
+    [[ -z $alacritty ]] && alacritty=$(whence -p alacritty)
+    alacritty=$(cygpath -aw "$alacritty")
+
+    shell=$(cygpath -aw "$(readlink -f "$SHELL")")
     if [[ $# -eq 0 ]]; then
-        exec cygstart --action=runas mintty -
+        exec cygstart --action=runas "$alacritty"
     else
-        exec cygstart --action=runas mintty -e "$SHELL -c ${(qq)command}"
+        exec cygstart --action=runas "$alacritty" --command "$shell" -lc "${(qq)argv}"
     fi
 elif [[ $OSTYPE == darwin* ]]; then
     exec sudo -E "${@:--s}"
