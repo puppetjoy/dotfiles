@@ -3,8 +3,11 @@ dark = ColorScheme.dark
 gui_scaling_factor =  @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
 scaling_ratio = text_scaling_factor / gui_scaling_factor
+font_size = (9 * scaling_ratio).round
 -%>
-<% if @facts['os']['family'] == 'windows' -%>
+<% if @facts['os']['family'] == 'windows'
+font_size = 8.75
+-%>
 [terminal]
 shell = "C:/tools/cygwin/bin/zsh.exe"
 
@@ -19,7 +22,7 @@ padding = { x = 2, y = 2 }
 
 [font]
 normal = { family = "Hack", style = "Regular" }
-size = <%= (9 * scaling_ratio).round %>
+size = <%= font_size %>
 
 [colors.primary]
 background = "<%= dark.background.web %>"
