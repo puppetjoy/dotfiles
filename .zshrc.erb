@@ -40,10 +40,17 @@ elif [[ $TERM == 'linux' && -o login && ! $SSH_CONNECTION ]]; then
 fi
 
 # Run tmux if it's not running, except in Codex shells.  I don't exec
-# 't' because if tmux is unavailable, then it will return a non-zero
-# exit code and zsh will continue as a fallback; and when tmux does run
-# and exits cleanly, I still want ~/.zlogout evaluated.
+# 't' in general because if tmux is unavailable, then it will return a
+# non-zero exit code and zsh will continue as a fallback; and when tmux
+# does run and exits cleanly, I still want ~/.zlogout evaluated.
+# Cygwin xterm visibly warns that a process received SIGHUP when the
+# window is closed, so exec tmux there to remove the parent zsh from the
+# shutdown path.
 if [[ ! $TMUX && $CODEX_SHELL != 1 ]]; then
+    if [[ $OSTYPE == 'cygwin' && $TERM == xterm* && -x $(whence -p tmux) ]]; then
+        exec t 2>/dev/null
+    fi
+
     t 2>/dev/null && exit
 fi
 
