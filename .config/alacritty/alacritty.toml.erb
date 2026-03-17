@@ -4,6 +4,7 @@ gui_scaling_factor =  @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
 scaling_ratio = text_scaling_factor / gui_scaling_factor
 font_size = (9 * scaling_ratio).round
+window_padding = 2
 windows_unscaled = false
 -%>
 <% if @facts['os']['family'] == 'windows'
@@ -16,6 +17,7 @@ windows_gui_power = 0.9
 font_size = windows_font_baseline * text_scaling_factor /
     windows_text_baseline / (gui_scaling_factor ** windows_gui_power)
 font_size = (font_size * 4).round / 4.0
+window_padding = 3
 windows_unscaled = gui_scaling_factor == 1
 -%>
 [terminal]
@@ -28,7 +30,7 @@ WINIT_X11_SCALE_FACTOR = "<%= gui_scaling_factor %>"
 
 [window]
 dimensions = { columns = 80, lines = 24 }
-padding = { x = 2, y = 2 }
+padding = { x = <%= window_padding %>, y = <%= window_padding %> }
 
 [font]
 normal = { family = "Hack", style = "Regular" }

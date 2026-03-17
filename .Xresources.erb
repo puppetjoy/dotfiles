@@ -2,10 +2,6 @@
 dark = ColorScheme.dark
 gui_scaling_factor = @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
-xterm_internal_border = 2
-if @facts['os']['family'] == 'windows'
-  xterm_internal_border = 1
-end
 -%>
 <% dark.terminal.each do |c| -%>
 *color<%= c.ansi %>: <%= c.x11 %>
@@ -51,7 +47,7 @@ xterm*termName: xterm-256color-powerline
 xterm*faceName: monospace
 xterm*faceSize: 9
 xterm*forceBoxChars: true
-xterm*internalBorder: <%= (xterm_internal_border * gui_scaling_factor).round %>
+xterm*internalBorder: <%= (2 * gui_scaling_factor).round %>
 xterm*saveLines: 10000
 xterm*scrollBar: false
 xterm*toolBar: false
