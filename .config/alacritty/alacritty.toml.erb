@@ -4,6 +4,7 @@ gui_scaling_factor =  @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
 scaling_ratio = text_scaling_factor / gui_scaling_factor
 font_size = (9 * scaling_ratio).round
+windows_unscaled = false
 -%>
 <% if @facts['os']['family'] == 'windows'
 # Windows desktop DPI scaling affects Alacritty font size less than a
@@ -15,6 +16,7 @@ windows_gui_power = 0.9
 font_size = windows_font_baseline * text_scaling_factor /
     windows_text_baseline / (gui_scaling_factor ** windows_gui_power)
 font_size = (font_size * 4).round / 4.0
+windows_unscaled = gui_scaling_factor == 1
 -%>
 [terminal]
 shell = "C:/tools/cygwin/bin/zsh.exe"
@@ -31,6 +33,9 @@ padding = { x = 2, y = 2 }
 [font]
 normal = { family = "Hack", style = "Regular" }
 size = <%= font_size %>
+<% if windows_unscaled -%>
+offset = { x = 0, y = 1 }
+<% end -%>
 
 [colors.primary]
 background = "<%= dark.background.web %>"
