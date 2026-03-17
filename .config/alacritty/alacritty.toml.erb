@@ -6,7 +6,15 @@ scaling_ratio = text_scaling_factor / gui_scaling_factor
 font_size = (9 * scaling_ratio).round
 -%>
 <% if @facts['os']['family'] == 'windows'
-font_size = 8.75
+# Windows desktop DPI scaling affects Alacritty font size less than a
+# straight text/gui ratio, so fit from known-good baselines and snap to
+# quarter-point sizes
+windows_font_baseline = 10.0
+windows_text_baseline = 1.1
+windows_gui_power = 0.9
+font_size = windows_font_baseline * text_scaling_factor /
+    windows_text_baseline / (gui_scaling_factor ** windows_gui_power)
+font_size = (font_size * 4).round / 4.0
 -%>
 [terminal]
 shell = "C:/tools/cygwin/bin/zsh.exe"
