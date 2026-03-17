@@ -17,8 +17,6 @@ if [[ $OS == 'Windows_NT' ]]; then
     else
         exec cygstart --action=runas "$alacritty" --command "$shell" -lc "${(qq)argv}"
     fi
-elif [[ $OSTYPE == darwin* ]]; then
-    exec sudo -E "${@:--s}"
 else
     exec sudo "${@:--s}"
 fi
