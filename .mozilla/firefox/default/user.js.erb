@@ -20,7 +20,7 @@ user_pref("extensions.pocket.enabled", false);
 user_pref("extensions.webextensions.restrictedDomains", "");
 user_pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 user_pref("media.ffmpeg.vaapi.enabled", true);
-user_pref("media.hardwaremediakeys.enabled", <%= @facts['os']['name'] != 'Nest' %>);
+user_pref("media.hardwaremediakeys.enabled", <%= @facts['os']['name'] != 'Nest' && @facts['os']['family'] != 'Darwin' %>);
 user_pref("mousewheel.default.delta_multiplier_x", 300);
 user_pref("network.negotiate-auth.trusted-uris", "umd.edu");
 user_pref("security.insecure_field_warning.contextual.enabled", false);
