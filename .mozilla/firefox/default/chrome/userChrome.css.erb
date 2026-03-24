@@ -22,6 +22,14 @@
 }
 <% end -%>
 
+<% if @facts['os']['family'] == 'Darwin' || @facts['os']['name'] == 'Darwin' -%>
+
+/* Make the address bar text feel closer to native macOS toolbar sizing */
+#urlbar-input {
+    font-size: 13px !important;
+}
+<% end -%>
+
 /* Hide ugly container tab highlight line */
 tab {
     --identity-icon-color: transparent !important;
