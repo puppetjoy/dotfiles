@@ -83,10 +83,17 @@ fi
 # Detect if we're running in another tmux session and set prefix and
 # appearance accordingly
 if [[ $TERM == tmux* ]]; then
-    tmux unbind C-b; tmux set -g prefix C-a; tmux bind C-a send-prefix
+    tmux unbind C-b
+    tmux unbind a
+    tmux set -g prefix C-a
+    tmux bind C-a send-prefix
+    tmux bind a send-prefix
     session_color='magenta'
 else
-    tmux unbind C-a; tmux set -g prefix C-b; tmux bind C-b send-prefix
+    tmux unbind C-a
+    tmux unbind a
+    tmux set -g prefix C-b
+    tmux bind C-b send-prefix
     session_color='cyan'
 fi
 
