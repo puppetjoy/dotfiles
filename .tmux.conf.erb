@@ -12,6 +12,12 @@ setw -g mode-keys vi
 # Configure additional variables to update on session attachment
 run-shell ~/.tmux/env.tmux
 
+# Set prefix bindings synchronously so plugins that derive bindings from the
+# current prefix see the correct value during startup.
+if-shell -F '#{||:#{m:tmux*,#{client_termname}},#{m:tmux*,#{environ:TERM}}}' \
+    'unbind-key C-b; unbind-key b; set -g prefix C-a; bind-key C-a send-prefix; bind-key a last-window' \
+    'unbind-key C-a; unbind-key a; set -g prefix C-b; bind-key C-b send-prefix; bind-key b last-window'
+
 # Configure my status bar, color scheme, and prefix based on TERM
 run-shell ~/.tmux/theme.tmux
 
