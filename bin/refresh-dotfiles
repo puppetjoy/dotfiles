@@ -89,13 +89,29 @@ file_mode() {
     fi
 }
 
+template_mode_attributes() {
+    local mode="$1"
+
+    if [[ $OSTYPE != 'cygwin' ]]; then
+        cat <<END
+  mode    => '${mode}',
+END
+    fi
+}
+
+sync_template_modes() {
+    git ls-files '*.erb' | while read template; do
+        chmod "$(file_mode "$template")" "${template%.erb}"
+    done
+}
+
 generate_manifest() {
     # Create/update dotfiles from templates in git
     git ls-files '*.erb' | while read template; do
         mode="$(file_mode "$template")"
         cat <<END
 file { '${BASEDIR}/${template%.erb}':
-  mode    => '${mode}',
+$(template_mode_attributes "$mode")
   content => template('${BASEDIR}/${template}'),
 }
 
@@ -151,17 +167,34 @@ fi
 if [[ $branch == 'main' || $PWD != $HOME ]]; then
     generate_manifest > "$MANIFEST"
 
-    cat >> "$MANIFEST" <<END_SPECIAL
+    if [[ $OSTYPE != 'cygwin' ]]; then
+        cat >> "$MANIFEST" <<END_SPECIAL
 File <| title == '${BASEDIR}/.ssh/config' |> {
   mode => '0600',
 }
+END_SPECIAL
+    fi
 
+    cat >> "$MANIFEST" <<END_SPECIAL
 include dotfiles
 END_SPECIAL
 
-    FACTER_basedir="$BASEDIR" "$PUPPET" apply --modulepath="${BASEDIR}/lib/puppet" "$MANIFEST"
+    if FACTER_basedir="$BASEDIR" "$PUPPET" apply --modulepath="${BASEDIR}/lib/puppet" "$MANIFEST"; then
+        if [[ $OSTYPE == 'cygwin' ]]; then
+            # Native Windows Puppet and Cygwin can derive different fake POSIX
+            # modes from the same ACLs when the account token's primary group
+            # is the user SID. Let Puppet handle rendering and keep observed
+            # shell permissions consistent by fixing modes through Cygwin.
+            sync_template_modes
+            chmod 0600 "${BASEDIR}/.ssh/config"
+        fi
+    else
+        exit $?
+    fi
 else
-    if command -v "$PUPPET" > /dev/null; then
+    if [[ $OSTYPE == 'cygwin' ]]; then
+        chmod 0600 "${BASEDIR}/.ssh/config"
+    elif command -v "$PUPPET" > /dev/null; then
         "$PUPPET" resource file "${BASEDIR}/.ssh/config" mode=0600
     else
         chmod 0600 "${BASEDIR}/.ssh/config"
