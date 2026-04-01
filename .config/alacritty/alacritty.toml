@@ -1,0 +1,62 @@
+[env]
+TERM = "alacritty-powerline"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+[window]
+dimensions = { columns = 80, lines = 24 }
+padding = { x = 2, y = 2 }
+
+[font]
+normal = { family = "Hack", style = "Regular" }
+size = 9
+
+[colors.primary]
+background = "#000000"
+foreground = "#d8d8d8"
+
+[colors.cursor]
+text   = "#000000"
+cursor = "#d8d8d8"
+
+[colors.normal]
+black   = "#000000"
+red     = "#ab4642"
+green   = "#a1b56c"
+yellow  = "#f7ca88"
+blue    = "#7cafc2"
+magenta = "#ba8baf"
+cyan    = "#86c1b9"
+white   = "#d8d8d8"
+
+[colors.bright]
+black   = "#585858"
+red     = "#ab4642"
+green   = "#a1b56c"
+yellow  = "#f7ca88"
+blue    = "#7cafc2"
+magenta = "#ba8baf"
+cyan    = "#86c1b9"
+white   = "#f8f8f8"
+
+[colors]
+indexed_colors = [
+  { index = 16, color = "#dc9656" },
+  { index = 17, color = "#a16946" },
+  { index = 18, color = "#282828" },
+  { index = 19, color = "#383838" },
+  { index = 20, color = "#b8b8b8" },
+  { index = 21, color = "#e8e8e8" },
+]
+
+# Note: On Windows ctrl+alt bindings don't work; use ctrl or ctrl+shift
+[keyboard]
+bindings = [
+  { key = "C",        mods = "Control|Alt",       action = "Copy"             },
+  { key = "V",        mods = "Control|Alt",       action = "Paste"            },
+  { key = "Equals",   mods = "Control|Alt",       action = "IncreaseFontSize" },
+  { key = "Plus",     mods = "Shift|Control|Alt", action = "IncreaseFontSize" },
+  { key = "Minus",    mods = "Control|Alt",       action = "DecreaseFontSize" },
+  { key = "Key0",     mods = "Control|Alt",       action = "ResetFontSize"    },
+]
+
+# vim: filetype=toml
