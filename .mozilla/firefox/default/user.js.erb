@@ -4,7 +4,7 @@ user_pref("browser.sessionstore.resume_from_crash", false);
 user_pref("browser.sessionstore.resume_session_once", false);
 user_pref("browser.tabs.insertRelatedAfterCurrent", true);
 <% if @facts['os']['name'] == 'Nest' -%>
-user_pref("browser.tabs.inTitlebar", 0);
+user_pref("browser.tabs.inTitlebar", <%= @facts['profile'] && @facts['profile']['variant'] == 'mobile' ? 1 : 0 %>);
 <% end -%>
 user_pref("browser.tabs.unloadOnLowMemory", false);
 user_pref("browser.tabs.warnOnClose", false);
