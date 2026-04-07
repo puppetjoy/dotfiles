@@ -39,7 +39,7 @@ fi
 
 if whence -p gdbus >/dev/null; then
     if result=$(gdbus call --session \
-        --dest de.lucaswerkmeister.ActivateWindowByTitle \
+        --dest org.gnome.Shell \
         --object-path /de/lucaswerkmeister/ActivateWindowByTitle \
         --method de.lucaswerkmeister.ActivateWindowByTitle.activateByWmClass \
         "$wm_class" 2>/dev/null); then
