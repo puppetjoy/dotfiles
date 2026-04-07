@@ -1,0 +1,14 @@
+<% require 'colorscheme'
+cs = ColorScheme.light
+-%>
+background = <%= cs.background.web %>
+foreground = <%= cs.foreground.web %>
+cursor-color = <%= cs.cursor.web %>
+cursor-text = <%= cs.background.web %>
+selection-background = <%= cs.colors_by_base[0x02].web %>
+selection-foreground = <%= cs.foreground.web %>
+<% cs.terminal.each do |color| -%>
+palette = <%= color.ansi %>=<%= color.web %>
+<% end -%>
+
+# vim: filetype=conf
