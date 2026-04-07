@@ -1,0 +1,52 @@
+#!/usr/bin/env zsh
+#
+# chatgpt
+#
+# Focus the ChatGPT Firefox PWA window when it already exists
+# Otherwise launch the user-local desktop entry
+#
+
+desktop_dir="${HOME}/.local/share/applications"
+
+desktop_value() {
+    local key=$1
+    local file=$2
+
+    sed -n "s/^${key}=//p" "$file" | head -n 1
+}
+
+desktop_file=''
+
+for candidate in "$desktop_dir"/FFPWA-*.desktop(N); do
+    if [[ $(desktop_value Name "$candidate") == 'ChatGPT' ]]; then
+        desktop_file=$candidate
+        break
+    fi
+done
+
+if [[ -z $desktop_file ]]; then
+    print -u2 -- "chatgpt: could not find ChatGPT Firefox PWA desktop file in ${desktop_dir}"
+    exit 1
+fi
+
+app_id="${desktop_file:t:r}"
+wm_class=$(desktop_value StartupWMClass "$desktop_file")
+
+if [[ -z $wm_class ]]; then
+    print -u2 -- "chatgpt: ${desktop_file} is missing StartupWMClass"
+    exit 1
+fi
+
+if whence -p gdbus >/dev/null; then
+    if result=$(gdbus call --session \
+        --dest de.lucaswerkmeister.ActivateWindowByTitle \
+        --object-path /de/lucaswerkmeister/ActivateWindowByTitle \
+        --method de.lucaswerkmeister.ActivateWindowByTitle.activateByWmClass \
+        "$wm_class" 2>/dev/null); then
+        if [[ $result == '(true,)' ]]; then
+            exit 0
+        fi
+    fi
+fi
+
+exec gtk-launch "$app_id"
