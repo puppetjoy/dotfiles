@@ -1,5 +1,6 @@
 theme = light:Light,dark:Dark
 font-size = 9.5
+mouse-scroll-multiplier = precision:0.33,discrete:3
 confirm-close-surface = false
 
 # vim: filetype=conf
