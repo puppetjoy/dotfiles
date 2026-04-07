@@ -148,7 +148,8 @@ default_session_name() {
         name="${name}-admin"
     fi
 
-    if [[ ! $TMUX && ! $TSESSION ]] && ! is_windows_admin; then
+    if [[ ! $TMUX && ! $TSESSION && ! $SSH_CONNECTION && ! $SSH_CLIENT && ! $SSH_TTY ]] &&
+        ! is_windows_admin; then
         local session_clients="$(tmux list-clients -t "$name" 2>/dev/null)"
         if [[ $session_clients ]]; then
             name="${name}-scratch"
