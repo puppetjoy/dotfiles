@@ -1,4 +1,5 @@
 theme = light:Light,dark:Dark
 font-size = 9.5
+confirm-close-surface = false
 
 # vim: filetype=conf
