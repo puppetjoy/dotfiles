@@ -113,18 +113,20 @@ tmux_new_session() {
 
 # Generate a meaningful session name, defaulting to the short hostname of the
 # system (useful for identifying remote tmux sessions).  If tmux is running
-# locally, then it is more meaningful to create sessions based on the name of
-# the workspace it's launched from.  If a workspace by that name is already
-# attached, then add '-scratch' to the name.  Any further handling of attached
-# session names is not done because I shouldn't allow myself to launch multiple
-# sessions in a single workspace.  All of this can be overridden by the
-# TSESSION environment variable.
+# locally under Sway or xmonad, then it is more meaningful to create sessions
+# based on the name of the workspace it's launched from.  If a workspace by
+# that name is already attached, then add '-scratch' to the name.  On desktop
+# environments without stable workspace names, fall back to the hostname and
+# add '-scratch' when the hostname session is already attached.  Any further
+# handling of attached session names is not done because I shouldn't allow
+# myself to launch multiple sessions in a single workspace.  All of this can
+# be overridden by the TSESSION environment variable.
 default_session_name() {
     local name="${HOST%%.*}"
 
     if [[ $TSESSION ]]; then
         name="$TSESSION"
-    elif [[ $XDG_SESSION_DESKTOP ]]; then
+    elif [[ -S $SWAYSOCK || $XDG_SESSION_DESKTOP == 'xmonad' ]]; then
         local current_desktop
 
         if [[ -S $SWAYSOCK ]]; then
@@ -141,16 +143,16 @@ default_session_name() {
 
         if [[ $current_desktop ]]; then
             name="$current_desktop"
-
-            if [[ ! $TMUX ]]; then
-                local session_clients="$(tmux list-clients -t "$name")"
-                if [[ $session_clients ]]; then
-                    name="${name}-scratch"
-                fi
-            fi
         fi
     elif is_windows_admin; then
         name="${name}-admin"
+    fi
+
+    if [[ ! $TMUX && ! $TSESSION ]] && ! is_windows_admin; then
+        local session_clients="$(tmux list-clients -t "$name" 2>/dev/null)"
+        if [[ $session_clients ]]; then
+            name="${name}-scratch"
+        fi
     fi
 
     print "$name"
