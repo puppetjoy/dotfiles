@@ -20,22 +20,130 @@ if [[ $TERM_PROGRAM == 'vscode' && $TERM != *-powerline ]]; then
 fi
 
 <% require 'colorscheme'
-cs = ColorScheme.dark
-xterm_escapes = cs.terminal.map do |c|
-  "\\e]4;#{c.ansi};#{c.x11}\\a"
-end.join
-xterm_escapes += "\\e]10;#{cs.foreground.x11}\\a"
-xterm_escapes += "\\e]11;#{cs.background.x11}\\a"
-xterm_escapes += "\\e]12;#{cs.cursor.x11}\\a"
-linux_escapes = cs.console.map do |c|
-  '\e]P%x%s' % [c.ansi, c.hex]
-end.join -%>
+terminal_escapes = lambda do |colorscheme|
+  escapes = colorscheme.terminal.map do |c|
+    "\\e]4;#{c.ansi};#{c.x11}\\a"
+  end.join
+
+  escapes += "\\e]10;#{colorscheme.foreground.x11}\\a"
+  escapes += "\\e]11;#{colorscheme.background.x11}\\a"
+  escapes += "\\e]12;#{colorscheme.cursor.x11}\\a"
+end
+
+console_escapes = lambda do |colorscheme|
+  colorscheme.console.map do |c|
+    '\e]P%x%s' % [c.ansi, c.hex]
+  end.join
+end
+
+dark = ColorScheme.dark
+light = ColorScheme.light
+dark_xterm_escapes = terminal_escapes.call(dark)
+light_xterm_escapes = terminal_escapes.call(light)
+dark_linux_escapes = console_escapes.call(dark)
+light_linux_escapes = console_escapes.call(light) -%>
+# Prefer an explicit override, otherwise follow the host appearance
+# VS Code's shell integration does not expose the active color theme
+colorscheme_light_is_enabled() {
+    local apps_use_light_theme
+    local color_scheme
+    local gtk_theme
+    local kde_background
+    local kdeglobals
+    local -a rgb
+
+    case ${COLORSCHEME_LIGHT:l} in
+        1|yes|true|on|light)
+            return 0
+            ;;
+        0|no|false|off|dark)
+            return 1
+            ;;
+    esac
+
+    case $OSTYPE in
+        darwin*)
+            [[ $(defaults read -g AppleInterfaceStyle 2>/dev/null) != 'Dark' ]]
+            return
+            ;;
+        cygwin*|msys*)
+            if whence reg.exe > /dev/null; then
+                apps_use_light_theme=$(reg.exe query 'HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize' /v AppsUseLightTheme 2>/dev/null | awk '/AppsUseLightTheme/ { print $NF; exit }')
+                case $apps_use_light_theme in
+                    0x1|1)
+                        return 0
+                        ;;
+                    0x0|0)
+                        return 1
+                        ;;
+                esac
+            fi
+            ;;
+        linux*)
+            if [[ -n $DBUS_SESSION_BUS_ADDRESS || -n $DISPLAY || -n $WAYLAND_DISPLAY ]] && whence gsettings > /dev/null; then
+                color_scheme=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'")
+                case $color_scheme in
+                    prefer-dark)
+                        return 1
+                        ;;
+                    prefer-light)
+                        return 0
+                        ;;
+                esac
+
+                gtk_theme=$(gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null | tr -d "'")
+                if [[ -n $gtk_theme ]]; then
+                    if [[ ${gtk_theme:l} == *dark* ]]; then
+                        return 1
+                    fi
+
+                    return 0
+                fi
+            fi
+
+            if [[ -n $DBUS_SESSION_BUS_ADDRESS || -n $DISPLAY || -n $WAYLAND_DISPLAY ]]; then
+                kdeglobals="${XDG_CONFIG_HOME:-$HOME/.config}/kdeglobals"
+                if [[ -r $kdeglobals ]]; then
+                    kde_background=$(awk -F= '
+                        $0 == "[Colors:Window]" { in_window = 1; next }
+                        /^\[/ { in_window = 0 }
+                        in_window && $1 == "BackgroundNormal" { print $2; exit }
+                    ' "$kdeglobals")
+                    if [[ -n $kde_background ]]; then
+                        rgb=(${(s:,:)kde_background})
+                        if (( $#rgb == 3 )); then
+                            (( rgb[1] * 299 + rgb[2] * 587 + rgb[3] * 114 >= 128000 ))
+                            return
+                        fi
+                    fi
+                fi
+            fi
+            ;;
+    esac
+
+    return 1
+}
+
+if colorscheme_light_is_enabled; then
+    export COLORSCHEME_LIGHT=1
+else
+    export COLORSCHEME_LIGHT=0
+fi
+
 if [[ ($TERM == *256color* || $TERM == foot* || $TERM == mintty*) && $TERM != tmux* ]]; then
     # Configure color palette on modern terminals
-    print -Pn '<%= xterm_escapes %>'
+    if [[ $COLORSCHEME_LIGHT == 1 ]]; then
+        print -Pn '<%= light_xterm_escapes %>'
+    else
+        print -Pn '<%= dark_xterm_escapes %>'
+    fi
 elif [[ $TERM == 'linux' && -o login && ! $SSH_CONNECTION ]]; then
     # Set Linux console color palette.  See console(4).
-    print -Pn '<%= linux_escapes %>'
+    if [[ $COLORSCHEME_LIGHT == 1 ]]; then
+        print -Pn '<%= light_linux_escapes %>'
+    else
+        print -Pn '<%= dark_linux_escapes %>'
+    fi
     clear
 fi
 

@@ -20,34 +20,59 @@ fi
 tmux_term='tmux'
 
 <% require 'colorscheme'
-cs = ColorScheme.dark -%>
+dark = ColorScheme.dark
+light = ColorScheme.light -%>
 if [[ $TERM == *truecolor* ]]; then
     tmux_term+='-truecolor'
-<% cs.colors_by_base.each do |c| -%>
+    if [[ ${COLORSCHEME_LIGHT:-0} == 1 ]]; then
+<% light.colors_by_base.each do |c| -%>
     base<%= c.base %>='#<%= c.hex %>'
 <% end -%>
+    else
+<% dark.colors_by_base.each do |c| -%>
+    base<%= c.base %>='#<%= c.hex %>'
+<% end -%>
+    fi
     status_style="bold"
     version_style="fg=${base00},none"
     tmux setw -g window-status-last-style "bg=${base02}"
 elif (( terminfo[colors] >= 256 )); then
     tmux_term+='-256color'
-<% cs.colors_by_base.each do |c| -%>
+    if [[ ${COLORSCHEME_LIGHT:-0} == 1 ]]; then
+<% light.colors_by_base.each do |c| -%>
     base<%= c.base %>='colour<%= c.ansi %>'
 <% end -%>
+    else
+<% dark.colors_by_base.each do |c| -%>
+    base<%= c.base %>='colour<%= c.ansi %>'
+<% end -%>
+    fi
     status_style="bold"
     version_style="fg=${base00},none"
     tmux setw -g window-status-last-style "bg=${base02}"
 elif (( terminfo[colors] >= 16 )); then
-<% cs.colors_by_base(16).each do |c| -%>
+    if [[ ${COLORSCHEME_LIGHT:-0} == 1 ]]; then
+<% light.colors_by_base(16).each do |c| -%>
     base<%= c.base %>='colour<%= c.ansi %>'
 <% end -%>
+    else
+<% dark.colors_by_base(16).each do |c| -%>
+    base<%= c.base %>='colour<%= c.ansi %>'
+<% end -%>
+    fi
     status_style="bold"
     version_style="fg=colour8,none"
     tmux setw -g window-status-last-style "bold"
 else
-<% cs.colors_by_base(8).each do |c| -%>
+    if [[ ${COLORSCHEME_LIGHT:-0} == 1 ]]; then
+<% light.colors_by_base(8).each do |c| -%>
     base<%= c.base %>='colour<%= c.ansi %>'
 <% end -%>
+    else
+<% dark.colors_by_base(8).each do |c| -%>
+    base<%= c.base %>='colour<%= c.ansi %>'
+<% end -%>
+    fi
     status_style="nobold"
     version_style="fg=colour8,bold"
     tmux setw -g window-status-last-style "bold"

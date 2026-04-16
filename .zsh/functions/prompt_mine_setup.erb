@@ -1,5 +1,6 @@
 <% require 'colorscheme'
-cs = ColorScheme.dark -%>
+dark = ColorScheme.dark
+light = ColorScheme.light -%>
 #
 # prompt_mine
 #
@@ -183,30 +184,59 @@ prompt_mine_setup() {
     autoload -U disambiguate
     autoload -U colors && colors
 
+    local colorscheme_light=${COLORSCHEME_LIGHT:-0}
     typeset -Ax mycolors_bg mycolors_fg
     mycolors_bg=(${(kv)bg})
     mycolors_fg=(${(kv)fg})
 
     if [[ $TERM == *truecolor* ]]; then
-<% cs.colors_by_base.each do |c| -%>
+        if [[ $colorscheme_light == 1 ]]; then
+<% light.colors_by_base.each do |c| -%>
         mycolors_bg[base<%= c.base %>]="\e[48;2;<%= c.rgb.join(';') %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;2;<%= c.rgb.join(';') %>m"
 <% end -%>
+        else
+<% dark.colors_by_base.each do |c| -%>
+        mycolors_bg[base<%= c.base %>]="\e[48;2;<%= c.rgb.join(';') %>m"
+        mycolors_fg[base<%= c.base %>]="\e[38;2;<%= c.rgb.join(';') %>m"
+<% end -%>
+        fi
     elif [[ $terminfo[colors] -ge 256 ]]; then
-<% cs.colors_by_base.each do |c| -%>
+        if [[ $colorscheme_light == 1 ]]; then
+<% light.colors_by_base.each do |c| -%>
         mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
 <% end -%>
+        else
+<% dark.colors_by_base.each do |c| -%>
+        mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
+        mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
+<% end -%>
+        fi
     elif [[ $terminfo[colors] -ge 16 ]]; then
-<% cs.colors_by_base(16).each do |c| -%>
+        if [[ $colorscheme_light == 1 ]]; then
+<% light.colors_by_base(16).each do |c| -%>
         mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
 <% end -%>
+        else
+<% dark.colors_by_base(16).each do |c| -%>
+        mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
+        mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
+<% end -%>
+        fi
     else
-<% cs.colors_by_base(8).each do |c| -%>
+        if [[ $colorscheme_light == 1 ]]; then
+<% light.colors_by_base(8).each do |c| -%>
         mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
 <% end -%>
+        else
+<% dark.colors_by_base(8).each do |c| -%>
+        mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
+        mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
+<% end -%>
+        fi
     fi
 
     zstyle -s ':prompt:mine' hide-users hide_users
