@@ -36,6 +36,8 @@ prompt_mine_segment() {
         fg=$bg
         bg=default
         bold=true
+    elif [[ -z $fg ]]; then
+        fg=default
     fi
 
     prompt_mine_separator $bg
@@ -231,13 +233,17 @@ prompt_mine_setup() {
         mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
 <% end -%>
-        else
+    else
 <% dark.colors_by_base(8).each do |c| -%>
         mycolors_bg[base<%= c.base %>]="\e[48;5;<%= c.ansi %>m"
         mycolors_fg[base<%= c.base %>]="\e[38;5;<%= c.ansi %>m"
 <% end -%>
         fi
     fi
+
+    # Keep prompt text aligned with the active colorscheme even on terminals
+    # that keep their own idea of the default foreground.
+    mycolors_fg[default]=${mycolors_fg[base05]}
 
     zstyle -s ':prompt:mine' hide-users hide_users
     zstyle -s ':prompt:mine' root root
