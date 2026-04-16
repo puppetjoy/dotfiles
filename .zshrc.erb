@@ -52,7 +52,7 @@ colorscheme_light_is_enabled() {
     local kdeglobals
     local -a rgb
 
-    case ${COLORSCHEME_LIGHT:l} in
+    case ${COLORSCHEME_LIGHT_OVERRIDE:l} in
         1|yes|true|on|light)
             return 0
             ;;
