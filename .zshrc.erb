@@ -40,8 +40,7 @@ dark = ColorScheme.dark
 light = ColorScheme.light
 dark_xterm_escapes = terminal_escapes.call(dark)
 light_xterm_escapes = terminal_escapes.call(light)
-dark_linux_escapes = console_escapes.call(dark)
-light_linux_escapes = console_escapes.call(light) -%>
+dark_linux_escapes = console_escapes.call(dark) -%>
 # Prefer an explicit override, otherwise follow the host appearance
 # VS Code's shell integration does not expose the active color theme
 colorscheme_light_is_enabled() {
@@ -130,6 +129,12 @@ else
     export COLORSCHEME_LIGHT=0
 fi
 
+# Keep shell state aligned with the dark-only Linux console palette so the
+# prompt and any downstream consumers do not pick a light scheme.
+if [[ $TERM == 'linux' ]]; then
+    export COLORSCHEME_LIGHT=0
+fi
+
 if [[ ($TERM == *256color* || $TERM == foot* || $TERM == mintty*) && $TERM != tmux* ]]; then
     # Configure color palette on modern terminals
     if [[ $COLORSCHEME_LIGHT == 1 ]]; then
@@ -139,11 +144,7 @@ if [[ ($TERM == *256color* || $TERM == foot* || $TERM == mintty*) && $TERM != tm
     fi
 elif [[ $TERM == 'linux' && -o login && ! $SSH_CONNECTION ]]; then
     # Set Linux console color palette.  See console(4).
-    if [[ $COLORSCHEME_LIGHT == 1 ]]; then
-        print -Pn '<%= light_linux_escapes %>'
-    else
-        print -Pn '<%= dark_linux_escapes %>'
-    fi
+    print -Pn '<%= dark_linux_escapes %>'
     clear
 fi
 
