@@ -155,7 +155,11 @@ fi
 # Cygwin xterm visibly warns that a process received SIGHUP when the
 # window is closed, so exec tmux there to remove the parent zsh from the
 # shutdown path.
-if [[ ! $TMUX && $CODEX_SHELL != 1 ]]; then
+t3code_shell_is_running() {
+    [[ $T3CODE_PROJECT_ROOT || $CHROME_DESKTOP == 't3code.desktop' ]]
+}
+
+if [[ ! $TMUX && $CODEX_SHELL != 1 ]] && ! t3code_shell_is_running; then
     if [[ $OSTYPE == 'cygwin' && $TERM == xterm* && -x $(whence -p tmux) ]]; then
         exec t 2>/dev/null
     fi
