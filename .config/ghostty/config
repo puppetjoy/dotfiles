@@ -1,0 +1,7 @@
+theme = light:Light,dark:Dark
+font-size = 9.5
+mouse-scroll-multiplier = precision:0.2
+confirm-close-surface = false
+term = xterm-ghostty-powerline
+
+# vim: filetype=conf
