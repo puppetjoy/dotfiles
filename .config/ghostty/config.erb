@@ -1,5 +1,5 @@
 theme = light:Light,dark:Dark
-<% if @facts['os']['name'] == 'Nest' -%>
+<% if @facts['os']['name'] == 'Nest' && @facts['preprocessed'] != 'true' -%>
 font-size = 9.5
 mouse-scroll-multiplier = precision:0.2
 <% else -%>

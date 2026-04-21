@@ -14,7 +14,7 @@ stages:
     - 'chmod 600 "$SSH_PRIVATE_KEY" && ssh-add "$SSH_PRIVATE_KEY"'
     - 'git remote set-url origin git@gitlab.joyfullee.me:joy/dotfiles.git'
   script:
-    - './.refresh'
+    - 'FACTER_preprocessed=true ./.refresh'
     - 'git add -f .'
     - 'git commit -m "Preprocess templates" --no-gpg-sign'
     - 'git push --force origin HEAD:preprocessed'
