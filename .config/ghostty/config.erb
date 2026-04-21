@@ -1,12 +1,12 @@
 theme = light:Light,dark:Dark
-<% if @facts['os']['family'] == 'Darwin' -%>
+<% if @facts['os']['name'] == 'Nest' -%>
+font-size = 9.5
+mouse-scroll-multiplier = precision:0.2
+<% else -%>
 font-size = 11.5
 font-thicken = true
 font-thicken-strength = 128
 window-padding-x = 3
-<% else -%>
-font-size = 9.5
-mouse-scroll-multiplier = precision:0.2
 <% end -%>
 confirm-close-surface = false
 term = xterm-ghostty-powerline
