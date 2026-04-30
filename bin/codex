@@ -7,16 +7,21 @@
 #
 
 self="${0:A}"
+local_codex="${HOME}/projects/codex-cli/codex-rs/target/release/codex"
 real_codex=''
 
-for dir in ${(s/:/)PATH}; do
-    [[ -z $dir ]] && dir='.'
-    candidate="${dir}/codex"
-    [[ -x $candidate ]] || continue
-    [[ "${candidate:A}" == "$self" ]] && continue
-    real_codex="$candidate"
-    break
-done
+if [[ -x $local_codex ]]; then
+    real_codex="$local_codex"
+else
+    for dir in ${(s/:/)PATH}; do
+        [[ -z $dir ]] && dir='.'
+        candidate="${dir}/codex"
+        [[ -x $candidate ]] || continue
+        [[ "${candidate:A}" == "$self" ]] && continue
+        real_codex="$candidate"
+        break
+    done
+fi
 
 if [[ -z $real_codex ]]; then
     echo "codex wrapper: could not find upstream codex in PATH" >&2
