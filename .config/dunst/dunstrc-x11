@@ -1,0 +1,37 @@
+[global]
+offset = 7x25
+scale = 1.0
+shrink = true
+corner_radius = 4
+frame_width = 0
+padding = 4
+horizontal_padding = 8
+separator_height = 1
+separator_color = foreground
+
+font = sans 9
+markup = full
+format = "<b>%s</b>\n%b"
+word_wrap = true
+
+enable_recursive_icon_lookup = true
+icon_position = left
+icon_theme = breeze-dark
+min_icon_size = 24
+
+dmenu = /usr/bin/rofi -dmenu -p dunst
+sticky_history = false
+
+[urgency_low]
+background = "#141414e6"
+foreground = "#b8b8b8"
+
+[urgency_normal]
+background = "#141414e6"
+foreground = "#e8e8e8"
+
+[urgency_critical]
+background = "#552321e6"
+foreground = "#e8e8e8"
+
+# vim:ft=dosini
