@@ -2,13 +2,14 @@
 #
 # codex
 #
-# Wrapper around Codex CLI that defaults the TUI syntax theme to "mine"
+# Wrapper around Codex CLI that defaults the TUI syntax theme to "dark"
 # without relying on mutable ~/.codex/config.toml state.
 #
 
 self="${0:A}"
 local_codex="${HOME}/projects/codex-cli/codex-rs/target/release/codex"
 real_codex=''
+theme='dark'
 
 if [[ -x $local_codex ]]; then
     real_codex="$local_codex"
@@ -28,4 +29,13 @@ if [[ -z $real_codex ]]; then
     exit 127
 fi
 
-exec "$real_codex" -c 'tui.theme="mine"' "$@"
+if [[ -n $DBUS_SESSION_BUS_ADDRESS || -n $DISPLAY || -n $WAYLAND_DISPLAY ]] && whence gsettings > /dev/null; then
+    color_scheme=$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null | tr -d "'")
+    case $color_scheme in
+        prefer-light|default)
+            theme='light'
+            ;;
+    esac
+fi
+
+exec "$real_codex" -c "tui.theme=\"${theme}\"" "$@"
