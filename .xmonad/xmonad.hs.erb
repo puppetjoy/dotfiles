@@ -15,6 +15,7 @@ import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.TopicSpace
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.Focus (activateSwitchWs)
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -246,6 +247,7 @@ workspaces' = ["web", "ops", "dev", "music", "mail", "chat", "seven", "eight", "
 
 main = xmonad
     . docks
+    . setEwmhActivateHook activateSwitchWs
     . ewmh
     . pagerHints
     . withNavigation2DConfig def { defaultTiledNavigation = centerNavigation }
