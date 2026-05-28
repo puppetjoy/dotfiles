@@ -310,7 +310,7 @@ main = xmonad
     -- , ("M-S-q"         , spawn "qdbus org.kde.ksmserver /KSMServer logout 1 0 1")
     , ("M-S-c"         , spawn "dunstctl close")
     , ("M-S-p"         , spawn "dunstctl history-pop")
-    , ("M-S-<Space>"   , spawn "dunstctl context")
+    , ("M-S-<Space>"   , spawn "~/.xmonad/scripts/dunst-context")
     , ("M-s"           , raisePanelTemporarily >> spawn "~/.xmonad/scripts/screensaver toggle")
     -- , ("M-<Escape>"    , unGrab >> spawn "~/.xmonad/scripts/screensaver reset; loginctl lock-session")
     , ("M-<Tab>"       , sendMessage NextLayout)
