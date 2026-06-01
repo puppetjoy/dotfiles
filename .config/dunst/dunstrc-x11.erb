@@ -5,9 +5,11 @@ text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
 taffybar_height = (18 * text_scaling_factor).round
 xmonad_edge_gap = (6.5 * text_scaling_factor).round
 notification_edge_offset = (xmonad_edge_gap / 2.0).round
+notification_top_offset = ((taffybar_height + notification_edge_offset) / gui_scaling_factor).round
+notification_top_offset += gui_scaling_factor.round if gui_scaling_factor > 1
 -%>
 [global]
-offset = <%= notification_edge_offset %>x<%= taffybar_height + notification_edge_offset %>
+offset = <%= notification_edge_offset %>x<%= notification_top_offset %>
 scale = <%= gui_scaling_factor %>
 shrink = true
 corner_radius = 4
