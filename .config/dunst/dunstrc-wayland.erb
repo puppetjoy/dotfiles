@@ -2,12 +2,15 @@
 dark = ColorScheme.dark.colors_by_base
 gui_scaling_factor = @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
+sway_scaling_ratio = text_scaling_factor / gui_scaling_factor
+sway_edge_gap = (13 * sway_scaling_ratio).round
+notification_edge_offset = (sway_edge_gap / 2.0).round
 -%>
 [global]
 <% if @facts['primary_output'] -%>
 monitor = <%= @facts['monitor_layout'].reverse.index @facts['primary_output'] %>
 <% end -%>
-offset = 7x7
+offset = <%= notification_edge_offset %>x<%= notification_edge_offset %>
 shrink = true
 corner_radius = 4
 frame_width = 0

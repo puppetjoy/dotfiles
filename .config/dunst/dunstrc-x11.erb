@@ -2,9 +2,12 @@
 dark = ColorScheme.dark.colors_by_base
 gui_scaling_factor = @facts['scaling'] ? @facts['scaling']['gui'] : 1
 text_scaling_factor = @facts['scaling'] ? @facts['scaling']['text'] : 1
+taffybar_height = (18 * text_scaling_factor).round
+xmonad_edge_gap = (6.5 * text_scaling_factor).round
+notification_edge_offset = (xmonad_edge_gap / 2.0).round
 -%>
 [global]
-offset = <%= (7 * text_scaling_factor).round %>x<%= (25 * text_scaling_factor).round %>
+offset = <%= notification_edge_offset %>x<%= taffybar_height + notification_edge_offset %>
 scale = <%= gui_scaling_factor %>
 shrink = true
 corner_radius = 4
