@@ -111,6 +111,10 @@ setBorderWidth' :: Dimension -> Window -> X ()
 setBorderWidth' width window = withDisplay $ \display ->
     io $ setWindowBorderWidth display window width
 
+suppressTelegramMediaViewerBorders :: X ()
+suppressTelegramMediaViewerBorders =
+    allWindowsByType isTelegramMediaViewer >>= mapM_ (setBorderWidth' 0)
+
 topicConfig :: TopicConfig
 topicConfig = def
     { defaultTopicAction = \topic -> return ()
@@ -181,6 +185,7 @@ logHook' = do
     historyHook
     workspaceHistoryHook
     refocusLastLogHook
+    suppressTelegramMediaViewerBorders
     raiseOverlays
 
 layoutHook' = id
