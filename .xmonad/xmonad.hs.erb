@@ -63,6 +63,12 @@ isFloating = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_ABOVE"
 isOSD      = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY"
 isTooltip  = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_TOOLTIP"
 
+isTelegramMediaViewer :: Query Bool
+isTelegramMediaViewer =
+    className =? "TelegramDesktop" <&&>
+    title =? "Media viewer" <&&>
+    isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
+
 isOverlayWindow :: Query Bool
 isOverlayWindow = do
     isNotification      <- isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
@@ -219,6 +225,7 @@ manageHook' = composeOne
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop
+    , isTelegramMediaViewer                   -?> doFullFloat
     , isTooltip                               -?> doIgnore
     , isFloating                              -?> doCenterFloat
     , isOSD                                   -?> doCenterFloat
@@ -248,6 +255,7 @@ workspaces' = ["web", "ops", "dev", "music", "mail", "chat", "seven", "eight", "
 main = xmonad
     . docks
     . setEwmhActivateHook activateSwitchWs
+    . ewmhFullscreen
     . ewmh
     . pagerHints
     . withNavigation2DConfig def { defaultTiledNavigation = centerNavigation }
