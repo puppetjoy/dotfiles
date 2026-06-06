@@ -50,6 +50,7 @@ import Control.Monad
 import Data.List
 import Data.Map
 import Data.Monoid
+import Graphics.X11.Xlib (Dimension, setWindowBorderWidth)
 import System.Directory
 
 -- Wrapper for TimerId so it can be stored in ExtensibleState
@@ -105,6 +106,10 @@ sendToJustAboveDesktop :: Window -> X ()
 sendToJustAboveDesktop window = do
     sendToBottom window
     allWindowsByType isDesktop >>= mapM_ sendToBottom
+
+setBorderWidth' :: Dimension -> Window -> X ()
+setBorderWidth' width window = withDisplay $ \display ->
+    io $ setWindowBorderWidth display window width
 
 topicConfig :: TopicConfig
 topicConfig = def
@@ -225,7 +230,7 @@ manageHook' = composeOne
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop
-    , isTelegramMediaViewer                   -?> doFullFloat
+    , isTelegramMediaViewer                   -?> doFullFloat <+> doWindowAction (setBorderWidth' 0)
     , isTooltip                               -?> doIgnore
     , isFloating                              -?> doCenterFloat
     , isOSD                                   -?> doCenterFloat
