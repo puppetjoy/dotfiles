@@ -29,42 +29,14 @@ settle_screen() {
     sleep 0.15
 }
 
-center_swappy_x11() {
-    [[ -n ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} ]] || return 0
-    command -v xdotool >/dev/null 2>&1 || return 0
-
-    local window display_width display_height geometry x y
-    for _ in {1..40}; do
-        window=$(xdotool search --onlyvisible --class swappy 2>/dev/null | tail -n 1) || true
-        [[ -n $window ]] && break
-        sleep 0.05
-    done
-    [[ -n $window ]] || return 0
-
-    sleep 0.25
-    read -r display_width display_height <<<"$(xdotool getdisplaygeometry)"
-    geometry=$(xdotool getwindowgeometry --shell "$window" 2>/dev/null) || return 0
-    eval "$geometry"
-    x=$(( (display_width - WIDTH) / 2 ))
-    y=$(( (display_height - HEIGHT) / 2 ))
-    xdotool windowmove "$window" "$x" "$y" >/dev/null 2>&1 || true
-}
-
-run_swappy() {
-    swappy "$@" &
-    local editor_pid=$!
-    center_swappy_x11
-    wait "$editor_pid"
-}
-
 open_editor() {
     need swappy
-    run_swappy -f -
+    swappy -f -
 }
 
 open_editor_file() {
     need swappy
-    run_swappy -f "$1"
+    swappy -f "$1"
 }
 
 choose_mode() {
@@ -166,56 +138,67 @@ x11_monitor_geometry() {
         '
 }
 
-x11_select_window() {
-    need xdotool
+capture_x11_with_shutter() {
+    local capture=$1
+    local input args
 
-    xdotool selectwindow 2>/dev/null
+    need shutter
+    input=$(mktemp --suffix=.png)
+
+    case $capture in
+        region)
+            args=(-s)
+            ;;
+        window)
+            args=(-w)
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+
+    settle_screen
+    shutter "${args[@]}" -e -o "$input" || {
+        rm -f -- "$input"
+        exit 0
+    }
+    if [[ -s $input ]]; then
+        open_editor_file "$input"
+        rm -f -- "$input"
+    else
+        rm -f -- "$input"
+        exit 0
+    fi
 }
 
 capture_x11() {
     local capture=$1
-    local geometry input window
+    local geometry
 
-    if [[ $capture == region ]]; then
-        need shutter
-        input=$(mktemp --suffix=.png)
-        settle_screen
-        shutter -s -e -o "$input" || {
-            rm -f -- "$input"
-            exit 0
-        }
-        if [[ -s $input ]]; then
-            open_editor_file "$input"
-            rm -f -- "$input"
-        else
-            rm -f -- "$input"
-            exit 0
-        fi
-        return
-    fi
-
-    need import
+    case $capture in
+        region|window)
+            capture_x11_with_shutter "$capture"
+            return
+            ;;
+        desktop|monitor)
+            need import
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
 
     case $capture in
         desktop)
             settle_screen
             import -window root png:-
             ;;
-        window)
-            settle_screen
-            window=$(x11_select_window) || exit 0
-            [[ -n $window ]] || exit 0
-            settle_screen
-            import -window "$window" png:-
-            ;;
         monitor)
             geometry=$(x11_monitor_geometry) || die "could not determine monitor under pointer"
             settle_screen
             import -window root -crop "$geometry" png:-
-            ;;
-        *)
-            usage
-            exit 2
             ;;
     esac | open_editor
 }
