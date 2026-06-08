@@ -29,14 +29,42 @@ settle_screen() {
     sleep 0.15
 }
 
+center_swappy_x11() {
+    [[ -n ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} ]] || return 0
+    command -v xdotool >/dev/null 2>&1 || return 0
+
+    local window display_width display_height geometry x y
+    for _ in {1..40}; do
+        window=$(xdotool search --onlyvisible --class swappy 2>/dev/null | tail -n 1) || true
+        [[ -n $window ]] && break
+        sleep 0.05
+    done
+    [[ -n $window ]] || return 0
+
+    sleep 0.25
+    read -r display_width display_height <<<"$(xdotool getdisplaygeometry)"
+    geometry=$(xdotool getwindowgeometry --shell "$window" 2>/dev/null) || return 0
+    eval "$geometry"
+    x=$(( (display_width - WIDTH) / 2 ))
+    y=$(( (display_height - HEIGHT) / 2 ))
+    xdotool windowmove "$window" "$x" "$y" >/dev/null 2>&1 || true
+}
+
+run_swappy() {
+    swappy "$@" &
+    local editor_pid=$!
+    center_swappy_x11
+    wait "$editor_pid"
+}
+
 open_editor() {
     need swappy
-    swappy -f -
+    run_swappy -f -
 }
 
 open_editor_file() {
     need swappy
-    swappy -f "$1"
+    run_swappy -f "$1"
 }
 
 choose_mode() {
