@@ -231,7 +231,10 @@ manageHook' = composeOne
     , className =? "ksmserver-logout-greeter" -?> doIgnore
     , className =? "XLogo"                    -?> doFloat
     , className =? "Firewall-config"          -?> doCenterFloat
+    , className =? "Swappy"                   -?> doCenterFloat
+    , className =? "swappy"                   -?> doCenterFloat
     , className =? "systemsettings"           -?> doCenterFloat
+    , appName   =? "swappy"                   -?> doCenterFloat
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop

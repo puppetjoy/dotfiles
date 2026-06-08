@@ -34,6 +34,11 @@ open_editor() {
     swappy -f -
 }
 
+open_editor_file() {
+    need swappy
+    swappy -f "$1"
+}
+
 choose_mode() {
     need rofi
 
@@ -141,7 +146,25 @@ x11_select_window() {
 
 capture_x11() {
     local capture=$1
-    local geometry window
+    local geometry input window
+
+    if [[ $capture == region ]]; then
+        need shutter
+        input=$(mktemp --suffix=.png)
+        settle_screen
+        shutter -s -e -o "$input" || {
+            rm -f -- "$input"
+            exit 0
+        }
+        if [[ -s $input ]]; then
+            open_editor_file "$input"
+            rm -f -- "$input"
+        else
+            rm -f -- "$input"
+            exit 0
+        fi
+        return
+    fi
 
     need import
 
@@ -149,10 +172,6 @@ capture_x11() {
         desktop)
             settle_screen
             import -window root png:-
-            ;;
-        region)
-            settle_screen
-            import png:-
             ;;
         window)
             settle_screen
