@@ -1,0 +1,227 @@
+#!/bin/zsh
+
+emulate -L zsh
+setopt pipefail
+
+mode=${1:-menu}
+screenshot_dir=${XDG_SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}
+mkdir -p -- "$screenshot_dir"
+
+usage() {
+    print -u2 "usage: screenshot [menu|desktop|monitor|window|region]"
+}
+
+notify() {
+    if command -v notify-send >/dev/null 2>&1; then
+        notify-send "Screenshot" "$1"
+    fi
+}
+
+die() {
+    print -u2 "screenshot: $*"
+    notify "$*"
+    exit 1
+}
+
+need() {
+    command -v "$1" >/dev/null 2>&1 || die "missing command: $1"
+}
+
+output_path() {
+    print -- "$screenshot_dir/screenshot-$(date +%Y%m%d-%H%M%S).png"
+}
+
+copy_png() {
+    local file=$1
+
+    if [[ -n ${WAYLAND_DISPLAY:-} ]] && command -v wl-copy >/dev/null 2>&1; then
+        wl-copy --type image/png < "$file"
+    elif [[ -n ${DISPLAY:-} ]] && command -v xclip >/dev/null 2>&1; then
+        xclip -selection clipboard -t image/png -i "$file"
+    else
+        return 0
+    fi
+}
+
+finish_file() {
+    local file=$1
+
+    if [[ -s $file ]]; then
+        copy_png "$file"
+        notify "Saved and copied: $file"
+        print -- "$file"
+    else
+        die "no screenshot was saved"
+    fi
+}
+
+choose_mode() {
+    need rofi
+    printf '%s\n' \
+        region \
+        window \
+        monitor \
+        desktop |
+        rofi -dmenu -p screenshot
+}
+
+wayland_window_geometry() {
+    need swaymsg
+    need jq
+    swaymsg -t get_tree |
+        jq -r '.. | select(type == "object" and .focused? == true) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' |
+        head -n 1
+}
+
+wayland_monitor_geometry() {
+    need swaymsg
+    need jq
+    need slurp
+    swaymsg -t get_outputs |
+        jq -r '.[] | select(.active) | "\(.rect.x),\(.rect.y) \(.rect.width)x\(.rect.height) \(.name)"' |
+        slurp
+}
+
+capture_wayland() {
+    local capture=$1
+    local input output geometry
+
+    need grim
+    need swappy
+    need wl-copy
+
+    input=$(mktemp --suffix=.png)
+    output=$(output_path)
+
+    case $capture in
+        desktop)
+            grim "$input"
+            ;;
+        region)
+            need slurp
+            geometry=$(slurp) || exit 0
+            grim -g "$geometry" "$input"
+            ;;
+        window)
+            geometry=$(wayland_window_geometry)
+            [[ -n $geometry ]] || die "could not determine focused Sway window"
+            grim -g "$geometry" "$input"
+            ;;
+        monitor)
+            geometry=$(wayland_monitor_geometry) || exit 0
+            grim -g "$geometry" "$input"
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+
+    swappy -f "$input" -o "$output"
+    rm -f -- "$input"
+    finish_file "$output"
+}
+
+x11_monitor_geometry() {
+    need xdotool
+    need xrandr
+
+    local pointer px py line name width height x y
+    pointer=$(xdotool getmouselocation --shell)
+    eval "$pointer"
+    px=$X
+    py=$Y
+
+    xrandr --query |
+        awk -v px="$px" -v py="$py" '
+            / connected/ && match($0, /([0-9]+)x([0-9]+)\+(-?[0-9]+)\+(-?[0-9]+)/, m) {
+                x=m[3]; y=m[4]; w=m[1]; h=m[2]
+                if (px >= x && px < x + w && py >= y && py < y + h) {
+                    printf "%sx%s+%s+%s\n", w, h, x, y
+                    found=1
+                    exit
+                }
+            }
+            END { if (!found) exit 1 }
+        '
+}
+
+capture_x11_with_shutter() {
+    local capture=$1
+    local output args
+
+    need shutter
+    output=$(output_path)
+
+    case $capture in
+        desktop)
+            args=(-f)
+            ;;
+        region)
+            args=(-s)
+            ;;
+        window)
+            args=(-w)
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+
+    shutter "${args[@]}" -e -o "$output"
+    finish_file "$output"
+}
+
+capture_x11_monitor() {
+    local geometry input output
+
+    need import
+    need shutter
+    geometry=$(x11_monitor_geometry) || die "could not determine monitor under pointer"
+    input=$(mktemp --suffix=.png)
+    output=$(output_path)
+
+    import -window root -crop "$geometry" "$input"
+    shutter -e "$input" -o "$output"
+    rm -f -- "$input"
+    finish_file "$output"
+}
+
+capture_x11() {
+    local capture=$1
+
+    case $capture in
+        monitor)
+            capture_x11_monitor
+            ;;
+        desktop|region|window)
+            capture_x11_with_shutter "$capture"
+            ;;
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+}
+
+if [[ $mode == menu ]]; then
+    mode=$(choose_mode)
+    [[ -n $mode ]] || exit 0
+fi
+
+case $mode in
+    desktop|monitor|window|region)
+        if [[ -n ${WAYLAND_DISPLAY:-} ]]; then
+            capture_wayland "$mode"
+        elif [[ -n ${DISPLAY:-} ]]; then
+            capture_x11 "$mode"
+        else
+            die "neither WAYLAND_DISPLAY nor DISPLAY is set"
+        fi
+        ;;
+    *)
+        usage
+        exit 2
+        ;;
+esac

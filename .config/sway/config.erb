@@ -50,6 +50,12 @@ bindsym $mod+Shift+c     exec dunstctl close
 bindsym $mod+Shift+p     exec dunstctl history-pop
 bindsym $mod+Shift+Space exec dunstctl context
 
+bindsym Print       exec ~/bin/screenshot menu
+bindsym Shift+Print exec ~/bin/screenshot region
+bindsym $mod+Print  exec ~/bin/screenshot monitor
+bindsym Mod1+Print  exec ~/bin/screenshot window
+bindsym Ctrl+Print  exec ~/bin/screenshot desktop
+
 bindsym $mod+s                exec ~/.xmonad/scripts/screensaver toggle
 bindsym $mod+Space            exec playerctl play-pause
 bindsym XF86AudioPlay         exec playerctl play-pause
