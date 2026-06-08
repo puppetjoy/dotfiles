@@ -138,28 +138,14 @@ x11_monitor_geometry() {
         '
 }
 
-capture_x11_with_shutter() {
-    local capture=$1
-    local input args
+capture_x11_region_with_shutter() {
+    local input
 
     need shutter
     input=$(mktemp --suffix=.png)
 
-    case $capture in
-        region)
-            args=(-s)
-            ;;
-        window)
-            args=(-w)
-            ;;
-        *)
-            usage
-            exit 2
-            ;;
-    esac
-
     settle_screen
-    shutter "${args[@]}" -e -o "$input" || {
+    shutter --profile=screenshot-helper --no_session --disable_systray -s -e -o "$input" || {
         rm -f -- "$input"
         exit 0
     }
@@ -172,16 +158,22 @@ capture_x11_with_shutter() {
     fi
 }
 
+x11_select_window() {
+    need xdotool
+
+    xdotool selectwindow 2>/dev/null
+}
+
 capture_x11() {
     local capture=$1
-    local geometry
+    local geometry window
 
     case $capture in
-        region|window)
-            capture_x11_with_shutter "$capture"
+        region)
+            capture_x11_region_with_shutter
             return
             ;;
-        desktop|monitor)
+        desktop|monitor|window)
             need import
             ;;
         *)
@@ -194,6 +186,12 @@ capture_x11() {
         desktop)
             settle_screen
             import -window root png:-
+            ;;
+        window)
+            window=$(x11_select_window) || exit 0
+            [[ -n $window ]] || exit 0
+            settle_screen
+            import -window "$window" png:-
             ;;
         monitor)
             geometry=$(x11_monitor_geometry) || die "could not determine monitor under pointer"
