@@ -4,8 +4,6 @@ emulate -L zsh
 setopt pipefail
 
 mode=${1:-menu}
-screenshot_dir=${XDG_SCREENSHOTS_DIR:-$HOME/Pictures/Screenshots}
-mkdir -p -- "$screenshot_dir"
 
 usage() {
     print -u2 "usage: screenshot [menu|desktop|monitor|window|region]"
@@ -27,42 +25,36 @@ need() {
     command -v "$1" >/dev/null 2>&1 || die "missing command: $1"
 }
 
-output_path() {
-    print -- "$screenshot_dir/screenshot-$(date +%Y%m%d-%H%M%S).png"
+settle_screen() {
+    sleep 0.15
 }
 
-copy_png() {
-    local file=$1
-
-    if [[ -n ${WAYLAND_DISPLAY:-} ]] && command -v wl-copy >/dev/null 2>&1; then
-        wl-copy --type image/png < "$file"
-    elif [[ -n ${DISPLAY:-} ]] && command -v xclip >/dev/null 2>&1; then
-        xclip -selection clipboard -t image/png -i "$file"
-    else
-        return 0
-    fi
-}
-
-finish_file() {
-    local file=$1
-
-    if [[ -s $file ]]; then
-        copy_png "$file"
-        notify "Saved and copied: $file"
-        print -- "$file"
-    else
-        die "no screenshot was saved"
-    fi
+open_editor() {
+    need swappy
+    swappy -f -
 }
 
 choose_mode() {
     need rofi
-    printf '%s\n' \
-        region \
-        window \
-        monitor \
-        desktop |
-        rofi -dmenu -p screenshot
+
+    local choice
+    choice=$(
+        printf '%s\n' \
+            '📐 Region' \
+            '🪟 Window' \
+            '🖥️ Monitor' \
+            '🌐 Desktop' |
+            rofi -dmenu -p '📸 Screenshot'
+    ) || return 1
+
+    case $choice in
+        '📐 Region') print region ;;
+        '🪟 Window') print window ;;
+        '🖥️ Monitor') print monitor ;;
+        '🌐 Desktop') print desktop ;;
+        '') return 1 ;;
+        *) die "unsupported choice: $choice" ;;
+    esac
 }
 
 wayland_window_geometry() {
@@ -84,49 +76,44 @@ wayland_monitor_geometry() {
 
 capture_wayland() {
     local capture=$1
-    local input output geometry
+    local geometry
 
     need grim
-    need swappy
-    need wl-copy
-
-    input=$(mktemp --suffix=.png)
-    output=$(output_path)
 
     case $capture in
         desktop)
-            grim "$input"
+            settle_screen
+            grim -
             ;;
         region)
             need slurp
             geometry=$(slurp) || exit 0
-            grim -g "$geometry" "$input"
+            settle_screen
+            grim -g "$geometry" -
             ;;
         window)
             geometry=$(wayland_window_geometry)
             [[ -n $geometry ]] || die "could not determine focused Sway window"
-            grim -g "$geometry" "$input"
+            settle_screen
+            grim -g "$geometry" -
             ;;
         monitor)
             geometry=$(wayland_monitor_geometry) || exit 0
-            grim -g "$geometry" "$input"
+            settle_screen
+            grim -g "$geometry" -
             ;;
         *)
             usage
             exit 2
             ;;
-    esac
-
-    swappy -f "$input" -o "$output"
-    rm -f -- "$input"
-    finish_file "$output"
+    esac | open_editor
 }
 
 x11_monitor_geometry() {
     need xdotool
     need xrandr
 
-    local pointer px py line name width height x y
+    local pointer px py
     pointer=$(xdotool getmouselocation --shell)
     eval "$pointer"
     px=$X
@@ -146,67 +133,48 @@ x11_monitor_geometry() {
         '
 }
 
-capture_x11_with_shutter() {
-    local capture=$1
-    local output args
+x11_select_window() {
+    need xdotool
 
-    need shutter
-    output=$(output_path)
-
-    case $capture in
-        desktop)
-            args=(-f)
-            ;;
-        region)
-            args=(-s)
-            ;;
-        window)
-            args=(-w)
-            ;;
-        *)
-            usage
-            exit 2
-            ;;
-    esac
-
-    shutter "${args[@]}" -e -o "$output"
-    finish_file "$output"
-}
-
-capture_x11_monitor() {
-    local geometry input output
-
-    need import
-    need shutter
-    geometry=$(x11_monitor_geometry) || die "could not determine monitor under pointer"
-    input=$(mktemp --suffix=.png)
-    output=$(output_path)
-
-    import -window root -crop "$geometry" "$input"
-    shutter -e "$input" -o "$output"
-    rm -f -- "$input"
-    finish_file "$output"
+    xdotool selectwindow 2>/dev/null
 }
 
 capture_x11() {
     local capture=$1
+    local geometry window
+
+    need import
 
     case $capture in
-        monitor)
-            capture_x11_monitor
+        desktop)
+            settle_screen
+            import -window root png:-
             ;;
-        desktop|region|window)
-            capture_x11_with_shutter "$capture"
+        region)
+            settle_screen
+            import png:-
+            ;;
+        window)
+            settle_screen
+            window=$(x11_select_window) || exit 0
+            [[ -n $window ]] || exit 0
+            settle_screen
+            import -window "$window" png:-
+            ;;
+        monitor)
+            geometry=$(x11_monitor_geometry) || die "could not determine monitor under pointer"
+            settle_screen
+            import -window root -crop "$geometry" png:-
             ;;
         *)
             usage
             exit 2
             ;;
-    esac
+    esac | open_editor
 }
 
 if [[ $mode == menu ]]; then
-    mode=$(choose_mode)
+    mode=$(choose_mode) || exit 0
     [[ -n $mode ]] || exit 0
 fi
 
