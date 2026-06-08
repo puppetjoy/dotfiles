@@ -228,7 +228,7 @@ layoutHook' = id
         }
 
 swappyFloat :: ManageHook
-swappyFloat = doRectFloat (W.RationalRect 0.1 0.1 0.8 0.8)
+swappyFloat = doRectFloat (W.RationalRect 0.02 0.04 0.96 0.92)
 
 manageHook' = composeOne
     [ className =? "ksmserver"                -?> doIgnore
