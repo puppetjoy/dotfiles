@@ -227,18 +227,12 @@ layoutHook' = id
         , urgentTextColor     = "<%= dark[0x01].web %>"
         }
 
-swappyFloat :: ManageHook
-swappyFloat = doRectFloat (W.RationalRect 0.02 0.04 0.96 0.92)
-
 manageHook' = composeOne
     [ className =? "ksmserver"                -?> doIgnore
     , className =? "ksmserver-logout-greeter" -?> doIgnore
     , className =? "XLogo"                    -?> doFloat
     , className =? "Firewall-config"          -?> doCenterFloat
-    , className =? "Swappy"                   -?> swappyFloat
-    , className =? "swappy"                   -?> swappyFloat
     , className =? "systemsettings"           -?> doCenterFloat
-    , appName   =? "swappy"                   -?> swappyFloat
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop
@@ -337,11 +331,7 @@ main = xmonad
     , ("M-S-c"         , spawn "dunstctl close")
     , ("M-S-p"         , spawn "dunstctl history-pop")
     , ("M-S-<Space>"   , spawn "dunstctl context")
-    , ("<Print>"        , unGrab >> spawn "~/bin/screenshot menu")
-    , ("S-<Print>"      , unGrab >> spawn "~/bin/screenshot region")
-    , ("M-<Print>"      , unGrab >> spawn "~/bin/screenshot monitor")
-    , ("M1-<Print>"     , unGrab >> spawn "~/bin/screenshot window")
-    , ("C-<Print>"      , unGrab >> spawn "~/bin/screenshot desktop")
+    , ("<Print>"        , unGrab >> spawn "flameshot gui")
     , ("M-s"           , raisePanelTemporarily >> spawn "~/.xmonad/scripts/screensaver toggle")
     -- , ("M-<Escape>"    , unGrab >> spawn "~/.xmonad/scripts/screensaver reset; loginctl lock-session")
     , ("M-<Tab>"       , sendMessage NextLayout)
