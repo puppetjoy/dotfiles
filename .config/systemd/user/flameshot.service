@@ -1,0 +1,13 @@
+[Unit]
+Description=Flameshot screenshot daemon
+Documentation=man:flameshot(1)
+PartOf=xmonad-session.target
+After=xmonad-session-pre.target
+
+[Service]
+ExecStart=/usr/bin/flameshot
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=xmonad-session.target
