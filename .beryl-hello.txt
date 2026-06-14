@@ -1,2 +1,3 @@
 hello from Beryl via dotfiles, GitLab MR, Bolt, and Puppet
 canary: t_5bf3a959 2026-06-14
+canary-2: t_f439ea20 2026-06-14 (rerouted, routing-fix verified)
