@@ -76,6 +76,26 @@
 3. Prefer `./bin/refresh-dotfiles --no-fetch` when validating local template changes.
 4. When changing path logic, test both Cygwin shell assumptions and native Puppet path requirements.
 
+## Agent Request MR Follow-Through Semantics
+- Review handoffs for dotfiles MRs must name one explicit follow-through mode:
+  `merge only; no live deploy intended`, `merge + deploy/apply/refresh and verify live state`,
+  or `merge, then block/ask Joy before deploy/apply/refresh`.
+- Do not write vague remaining actions such as `run any desired dotfiles deployment/apply/refresh`.
+  If a worker receives wording like that, block for clarification instead of deciding whether live
+  deployment is needed.
+- Keep these decisions separate in handoffs and checklists:
+  1. Is ERB render/template validation needed for source correctness?
+  2. Is live `refresh-dotfiles`/dotfiles deployment needed to materialize a tracked file in `/home/joy`?
+  3. Is Puppet or Bolt apply needed on a host?
+- A plain tracked file that is not `*.erb` does not need template rendering, but it may still need
+  live dotfiles refresh/deploy if Joy approved materializing it in the home directory.
+- Canary requests must say whether the canary is source-only/MR-lifecycle-only or must be
+  materialized under `/home/joy` and verified after merge.
+- Regression reference: ar-20260614-060229-d94936 / t_5727f50d, MR joy/dotfiles!3,
+  used a plain tracked `.beryl-hello.txt` and ambiguous `any desired deploy/apply/refresh`
+  follow-through wording; the worker skipped deployment and Joy later asked who made that decision.
+
 ## Validation Notes
 - There is no single top-level test suite for the repo itself.
 - Practical checks are script syntax checks (`zsh -n`, `bash -n`, `ruby -c`) and targeted smoke tests like `./bin/refresh-dotfiles --help`.
+- For Agent Request follow-through semantics, run `ruby test/agent_request_followthrough_semantics_test.rb`.
