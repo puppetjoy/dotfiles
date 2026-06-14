@@ -1,0 +1,3 @@
+canary: initial Beryl GitLab-Hermes request-changes loop for this Agent Request
+agent request: ar-20260614-180355-e834cf
+task id: t_cf57857a
