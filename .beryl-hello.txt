@@ -1,2 +1,3 @@
 hello from Beryl via dotfiles, GitLab MR, Bolt, and Puppet
 canary: t_5bf3a959 2026-06-14
+canary: t_5727f50d mentor request-changes loop 2026-06-14
