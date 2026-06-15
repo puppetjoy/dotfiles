@@ -1,0 +1,3 @@
+Berly canary t11 — GitLab-native Joy approval inbound sync
+Source: ar-20260615-220811-e339a2 / t_d5db9557
+Goal: Joy approves directly in GitLab; broker detects and links without Telegram.
