@@ -1,0 +1,2 @@
+Beryl GitLab-native Joy approval inbound canary (t_f77d416d / ar-20260615-224114-4deee8).
+Source-only marker. No deploy, no refresh, no Puppet. Merge-only follow-through.
