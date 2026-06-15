@@ -2,3 +2,4 @@ t_7dfb779f canary marker 2026-06-15 — gated MR lifecycle test
 Task: Launch gated Beryl dotfiles MR canary
 Request: ar-20260615-041713-a3d93a
 Phase: source-only (no deploy/materialization without Joy approval)
+Review-loop: Talon requested this revision on MR !5
