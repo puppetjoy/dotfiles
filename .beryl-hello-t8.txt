@@ -1,0 +1,5 @@
+t_0c822644 canary marker 2026-06-15 — next Beryl GitLab MR workflow canary
+Task: Run next Beryl GitLab MR workflow canary
+Request: ar-20260615-171519-84755d
+Phase: source-only MR lifecycle exercise (no deploy/materialization without Joy approval)
+Notes: MR created via glab CLI with Beryl identity (beryl@joyfullee.me)
