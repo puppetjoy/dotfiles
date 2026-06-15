@@ -1,0 +1,2 @@
+Beryl-hello-t10 source-only canary marker.
+Created for native Joy approval MR canary: ar-20260615-205955-35d9a8 / t_2dc0bdc6
