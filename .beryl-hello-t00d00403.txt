@@ -1,0 +1,3 @@
+canary: t_00d00403 retest public-note hygiene after MR !19 fix
+by Joy (with Beryl) — 2026-06-16
+source-only marker; no generated output or live deployment affected
