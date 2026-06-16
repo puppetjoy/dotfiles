@@ -1,0 +1,11 @@
+# Beryl Dotfiles MR Canary Artifact
+# Task: t_ce4d03c9
+# Request: ar-20260616-145922-4ef211
+# Purpose: Source-only canary evidence for Talon oversight lane
+# Follow-through: merge only; no live deploy/materialization/refresh intended
+# Created: 2026-06-16
+
+This is a harmless reversible source-only marker for Beryl's
+first GitLab MR artifact under the Talon oversight canary.
+It does not require dotfiles refresh, Puppet apply, or host
+state changes.
