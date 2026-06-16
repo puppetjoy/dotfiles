@@ -1,0 +1,1 @@
+canary: t_18ff7afa first-class AR↔GitLab sync canary 2026-06-16
