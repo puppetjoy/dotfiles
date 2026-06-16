@@ -1,0 +1,9 @@
+# Beryl dotfiles MR canary for P3.2/P3.3
+# P3.2: Joy requests changes using ordinary GitLab text or review UI
+# P3.3: Joy leaves ordinary steering text reaching the canonical Beryl source task
+#
+# Created: 2026-06-16
+# Request: ar-20260616-045525-aa54c1
+# Parent oversight: ar-20260616-045227-8c35da / t_bf14df45
+# Work item: #1
+# Source-only guardrail: this file requires no live materialization or Puppet deploy.
