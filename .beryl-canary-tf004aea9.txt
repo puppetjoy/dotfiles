@@ -1,0 +1,4 @@
+Beryl observation-only canary for t_f004aea9.
+Source-only marker; no deployment intended.
+Created: 2026-06-16 by beryl
+Task: t_f004aea9 / ar-20260616-223705-92951e
