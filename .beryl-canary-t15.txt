@@ -1,0 +1,2 @@
+Beryl canary t15 — source-only marker for Talon lifecycle/sync retest
+Task: t_8fdf0b62 | Request: ar-20260616-175013-ae5af4
