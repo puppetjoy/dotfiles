@@ -1,0 +1,3 @@
+canary: t_8c157f38 native AR→GitLab→Telegram sync validation 2026-06-16
+request: ar-20260616-203301-622ffe
+source-only marker; no generated output or live deployment affected
