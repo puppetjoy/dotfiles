@@ -1,0 +1,2 @@
+Beryl canary t_344e742e: enriched MR notification check.
+Task: verify MR-backed approval notification includes MR context and action buttons.
