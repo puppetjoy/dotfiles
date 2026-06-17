@@ -1,3 +1,15 @@
+   _______________
+   /               \
+  /    _     _      \
+ |~|o|  (o)_(o)  |~|
+ |~|   \______/   |~|
+ |  ~   |~~~~|   ~  |
+ |      |~~~~|      |
+  \____/|____|\____/
+        |~~~~|
+        |~~~~|
+        \____/
+
 🐝 Beryl canary t_8f8f020e — persistent AR/MR/TG feedback contexts retry
 Date: 2026-06-17
 Status: source-only canary for context-routing validation
