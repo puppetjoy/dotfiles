@@ -1,0 +1,2 @@
+Beryl/Talon/Joy workflow canary — source-only MR validation.
+Do not deploy or refresh this file in production dotfiles.
