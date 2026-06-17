@@ -1,0 +1,4 @@
+# Beryl canary source-only dotfiles MR after mentor-review wake fix
+# Task t_a29b564a
+# This is a harmless marker file for the post-fix canary.
+# Do not deploy, refresh, or materialize this file.
