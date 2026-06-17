@@ -1,0 +1,12 @@
+🐝 Beryl canary t_8f8f020e — persistent AR/MR/TG feedback contexts retry
+Date: 2026-06-17
+Status: source-only canary for context-routing validation
+Parent: ar-20260617-043147-9dc0bb / t_6c7cd572
+
+This MR validates the fixed context-routing flow:
+- Talon review context persists across reviewer events
+- Joy comments route to Beryl by default
+- @talon mentions wake Talon exactly once
+- @beryl mentions route to Beryl
+
+No deploy. No Puppet. Source-only. 🐝
