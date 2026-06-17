@@ -1,0 +1,4 @@
+canary: t_98689bcb unified AR/MR/TG feedback lifecycle validation 2026-06-17
+request: ar-20260617-031717-2ba59e
+source-only marker; no generated output or live deployment affected
+joy: added by Joy's review-change request
