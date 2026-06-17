@@ -1,0 +1,1 @@
+# Beryl post-MR-20 canary — source-only marker (t_3bae57dd / ar-20260617-001628-18cdfe)
