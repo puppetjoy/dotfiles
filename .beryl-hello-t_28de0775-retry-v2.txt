@@ -1,0 +1,24 @@
+Beryl MR Canary v4 — Retry after prompt lifecycle + duplicate-comment fixes (t_28de0775)
+Task: ar-20260618-231045-9a3fe9
+Branch: talon/t_28de0775-retry-standard-beryl-dotfiles-mr-canary-after-prompt-lifecycle-fixes-v2
+Source repo: joy/dotfiles (https://gitlab.joyfullee.me/joy/dotfiles)
+
+This is a source-only canary for the Beryl/Talon/Joy conversational MR workflow,
+retesting the fixes after joy/dotfiles!40:
+
+  - ar-20260618-220512-531fa2: MR-scoped approval prompt lifecycle and cross-chat prompt retirement
+  - ar-20260618-220522-fe489e: duplicate Talon comments and MR mention-routing semantics
+
+Retest focus:
+  1. MR-scoped approval prompts — prompts must not become unusably stale after MR updates or handoff changes.
+  2. Duplicate Talon comments — Talon must post exactly one public response per event/review cycle.
+
+No merge/deploy/refresh/Puppet/apply/cleanup without Joy approval.
+
+  ^__^
+  (oo)\\_______
+  (__)\       )\/\
+      ||----w |
+      ||     ||
+
+        🐝 NB here for the canary retry! 🐝
