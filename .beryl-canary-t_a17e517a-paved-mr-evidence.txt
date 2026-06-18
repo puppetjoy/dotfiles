@@ -1,0 +1,21 @@
+Beryl paved MR evidence canary for task t_a17e517a (ar-20260618-025454-82cfbc).
+Source-only canary — no deploy intended.
+
+    __
+   /  \   ~~~
+  | o o |  ~~~
+   \ ___/   ~~~
+   /|   |\
+  / |   | \
+ |  |   |  |
+  \ |   | /
+   \|   |/
+    \___/
+  _/|   |\_
+   / |   | \
+  /  |   |  \
+    /     \
+   /       \
+  (bee art:
+   one busy
+   beryl bee!)
