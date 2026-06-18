@@ -1,0 +1,7 @@
+🐝 Beryl's fresh conversational MR canary — ar-20260618-160330-8e41df
+Created: 2026-06-18
+This is a source-only canary file for the Beryl/Talon/Joy GitLab MR workflow exercise.
+No deployment or Puppet apply is authorized without Joy approval.
+
+Revised per Talon review: the ready-for-review sequence now runs cleanly
+with the GitLab-native review request as the final MR action (post-revision commit).
