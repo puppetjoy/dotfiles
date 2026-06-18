@@ -1,0 +1,17 @@
+Beryl dotfiles MR canary — retry after approval sync fix
+Task: t_6e665b16
+Request: ar-20260618-210203-4e8271
+Created: 2026-06-18
+Retrying MR !40 fixes:
+- Telegram trusted Joy approval → native GitLab MR approval by Joy
+- Beryl MR answer mirrors to Telegram once, no duplicate GitLab loop
+- Restart/reclaim doesn't false-block already-answered states
+Source-only canary. No deploy/refresh/Puppet/apply intended.
+
+        __
+       /  \
+      | O  |  thank you for being awesome, joy! 🐝💚
+       \__/
+      /|  |\
+     / |  | \
+       /  \
