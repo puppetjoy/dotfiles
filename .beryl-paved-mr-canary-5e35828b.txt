@@ -1,0 +1,9 @@
+🐝 Beryl canary: paved GitLab MR tools validation
+Task: t_5e35828b
+Request: ar-20260618-010619-ecb906
+Created: 2026-06-18
+
+This file proves Beryl can create a tracked file, commit, push,
+and create an MR entirely through the paved GitLab MR tool path
+(agent_request_gitlab_mr_create, _read, _update, _comment,
+_ready_for_review, _request_review).
