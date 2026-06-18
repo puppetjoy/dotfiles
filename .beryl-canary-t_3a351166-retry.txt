@@ -1,0 +1,13 @@
+Beryl MR Canary v3 — Retry after broker-owned lifecycle fixes (t_3a351166)
+Task: ar-20260618-194055-dbe114
+Branch: talon/t_3a351166-retry-standard-beryl-dotfiles-mr-canary-after-li
+
+This is a source-only canary. No deploy/refresh/Puppet/apply authorized.
+
+  ^__^
+  (oo)\_______
+  (__)\       )\/\
+      ||----w |
+      ||     ||
+
+        🐝 A little extra bee energy for you, Joy! 🐝
