@@ -1,0 +1,116 @@
+*color0: rgb:00/00/00
+*color1: rgb:ab/46/42
+*color2: rgb:a1/b5/6c
+*color3: rgb:f7/ca/88
+*color4: rgb:7c/af/c2
+*color5: rgb:ba/8b/af
+*color6: rgb:86/c1/b9
+*color7: rgb:d8/d8/d8
+*color8: rgb:58/58/58
+*color9: rgb:ab/46/42
+*color10: rgb:a1/b5/6c
+*color11: rgb:f7/ca/88
+*color12: rgb:7c/af/c2
+*color13: rgb:ba/8b/af
+*color14: rgb:86/c1/b9
+*color15: rgb:f8/f8/f8
+*color16: rgb:dc/96/56
+*color17: rgb:a1/69/46
+*color18: rgb:28/28/28
+*color19: rgb:38/38/38
+*color20: rgb:b8/b8/b8
+*color21: rgb:e8/e8/e8
+*foreground: rgb:e8/e8/e8
+*background: rgb:28/28/28
+*borderColor: rgb:58/58/58
+
+URxvt.color0: rgb:00/00/00
+URxvt.color1: rgb:ab/46/42
+URxvt.color2: rgb:a1/b5/6c
+URxvt.color3: rgb:f7/ca/88
+URxvt.color4: rgb:7c/af/c2
+URxvt.color5: rgb:ba/8b/af
+URxvt.color6: rgb:86/c1/b9
+URxvt.color7: rgb:d8/d8/d8
+URxvt.color8: rgb:58/58/58
+URxvt.color9: rgb:ab/46/42
+URxvt.color10: rgb:a1/b5/6c
+URxvt.color11: rgb:f7/ca/88
+URxvt.color12: rgb:7c/af/c2
+URxvt.color13: rgb:ba/8b/af
+URxvt.color14: rgb:86/c1/b9
+URxvt.color15: rgb:f8/f8/f8
+URxvt.color16: rgb:dc/96/56
+URxvt.color17: rgb:a1/69/46
+URxvt.color18: rgb:28/28/28
+URxvt.color19: rgb:38/38/38
+URxvt.color20: rgb:b8/b8/b8
+URxvt.color21: rgb:e8/e8/e8
+URxvt.foreground: rgb:d8/d8/d8
+URxvt.background: rgb:00/00/00
+URxvt.borderColor: rgb:00/00/00
+URxvt.cursorColor: rgb:d8/d8/d8
+URxvt.font: xft:Hack:size=9,xft:DejaVu Sans Mono
+URxvt.internalBorder: 2
+URxvt.perl-ext-common: font-size,new-window,osc-xterm-clipboard
+URxvt.keysym.C-M-equal: perl:font-size:increase
+URxvt.keysym.C-M-plus: perl:font-size:increase
+URxvt.keysym.C-M-minus: perl:font-size:decrease
+URxvt.keysym.C-M-0: perl:font-size:reset
+URxvt.keysym.C-M-n: perl:new-window
+URxvt.saveLines: 10000
+URxvt.scrollBar: false
+URxvt.scrollTtyOutput: false
+URxvt.scrollWithBuffer: true
+URxvt.scrollTtyKeypress: true
+URxvt.secondaryScroll: false
+URxvt.secondaryWheel: true
+URxvt.termName: rxvt-unicode-256color-powerline
+URxvt.urgentOnBell: true
+URxvt.letterSpace: -1
+
+xterm*color0: rgb:00/00/00
+xterm*color1: rgb:ab/46/42
+xterm*color2: rgb:a1/b5/6c
+xterm*color3: rgb:f7/ca/88
+xterm*color4: rgb:7c/af/c2
+xterm*color5: rgb:ba/8b/af
+xterm*color6: rgb:86/c1/b9
+xterm*color7: rgb:d8/d8/d8
+xterm*color8: rgb:58/58/58
+xterm*color9: rgb:ab/46/42
+xterm*color10: rgb:a1/b5/6c
+xterm*color11: rgb:f7/ca/88
+xterm*color12: rgb:7c/af/c2
+xterm*color13: rgb:ba/8b/af
+xterm*color14: rgb:86/c1/b9
+xterm*color15: rgb:f8/f8/f8
+xterm*color16: rgb:dc/96/56
+xterm*color17: rgb:a1/69/46
+xterm*color18: rgb:28/28/28
+xterm*color19: rgb:38/38/38
+xterm*color20: rgb:b8/b8/b8
+xterm*color21: rgb:e8/e8/e8
+xterm*foreground: rgb:d8/d8/d8
+xterm*background: rgb:00/00/00
+xterm*borderColor: rgb:00/00/00
+xterm*cursorColor: rgb:d8/d8/d8
+xterm*termName: xterm-256color-powerline
+xterm*faceName: monospace
+xterm*faceSize: 9
+xterm*forceBoxChars: true
+xterm*internalBorder: 2
+xterm*saveLines: 10000
+xterm*scrollBar: false
+xterm*toolBar: false
+! Enable OSC 52 for tmux selection to primary buffer
+xterm*allowWindowOps: true
+! Selections should only go to primary buffer
+xterm*selectToClipboard: false
+xterm*VT100*translations: #override \n\
+    Ctrl Meta <Key>c: copy-selection(CLIPBOARD) \n\
+    Ctrl Meta <Key>v: insert-selection(CLIPBOARD) \n\
+    Ctrl Meta <Key>+: larger-vt-font() \n\
+    Ctrl Meta <Key>-: smaller-vt-font() \n\
+    Ctrl Meta <Key>0: set-vt-font(d) \n\
+    Ctrl Meta <Key>n: spawn-new-terminal()

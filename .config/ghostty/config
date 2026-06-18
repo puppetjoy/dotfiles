@@ -1,0 +1,11 @@
+theme = light:Light,dark:Dark
+font-size = 11.5
+font-thicken = true
+font-thicken-strength = 128
+mouse-scroll-multiplier = discrete:0.5
+undo-timeout = 0
+window-padding-x = 3
+confirm-close-surface = false
+term = xterm-ghostty-powerline
+
+# vim: filetype=conf

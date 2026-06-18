@@ -1,0 +1,7 @@
+configuration {
+    dpi: 96;
+}
+
+@theme "dark"
+
+/* vim: filetype=css
