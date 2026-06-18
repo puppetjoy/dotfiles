@@ -1,0 +1,3 @@
+Beryl canary: general MR conversation lifecycle test.
+Task t_3612e35c / request ar-20260618-053110-e63284.
+Created 2026-06-18. Source-only canary — no deploy intended.
