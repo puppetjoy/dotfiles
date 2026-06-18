@@ -9,3 +9,5 @@ This is a source-only canary. No deploy/refresh/Puppet/apply authorized.
   (__)\       )\/\
       ||----w |
       ||     ||
+
+        🐝 A little extra bee energy for you, Joy! 🐝
