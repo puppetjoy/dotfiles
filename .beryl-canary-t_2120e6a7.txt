@@ -1,0 +1,2 @@
+Beryl canary marker for t_2120e6a7 (ar-20260618-173141-34cab5)
+Source-only: no merge/deploy/refresh/Puppet/apply/cleanup without Joy approval.
