@@ -1,0 +1,2 @@
+Beryl MR workflow canary — task t_b825063a.
+Fresh paved-tool request-changes loop exercise.
