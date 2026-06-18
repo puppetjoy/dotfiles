@@ -1,0 +1,21 @@
+Beryl canary retry v2 — t_9d075e6b / ar-20260618-181342-1c75c2
+Source-only change for GitLab MR canary retry after !37 fixes.
+This file tests:
+  - Single Beryl ready/context comment (no duplicates)
+  - Talon mentor review → GitLab-native approval → Joy-ready notification
+
+No merge/deploy/refresh/Puppet/apply/cleanup without Joy approval.
+
+         .   .
+    .  (  o  o )  .
+      \   B E R Y L  /
+       \   .---.  /
+        )  (   )  (
+       (   \   /   )
+        \   '-'   /
+         \       /
+          )     (
+         (       )
+          \     /
+           \   /
+            '-'
