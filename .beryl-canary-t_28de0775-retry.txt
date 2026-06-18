@@ -1,0 +1,18 @@
+Beryl dotfiles MR canary — retry after prompt lifecycle fixes
+Task: t_28de0775
+Request: ar-20260618-231045-9a3fe9
+Created: 2026-06-18
+Retrying MR !40 + broker follow-up fixes (ar-20260618-220512, ar-20260618-220522):
+- MR-scoped approval prompts / prompt lifecycle
+- Duplicate Talon comments / mention routing
+- Ready-for-review ordering
+- Talon re-approval reissues Joy prompt
+Source-only canary. No deploy/refresh/Puppet/apply intended.
+
+        __
+       /  \
+      | O  |  thank you for being awesome, joy! 🐝💚
+       \__/
+      /|  |\
+     / |  | \
+       /  \
