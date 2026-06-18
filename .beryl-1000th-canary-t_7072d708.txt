@@ -1,0 +1,7 @@
+Beryl's 1,000th-task canary marker — source-only, no deploy intended.
+
+    /\_/\
+   ( o.o )
+    > ^ <
+   /|   |\
+  (_|   |_)
