@@ -1,0 +1,4 @@
+🐝 Beryl MR canary t_cf4c3b13 fresh retry
+Source-only tracked file for the Beryl/Talon/Joy GitLab MR canary.
+Created: 2026-06-19
+Request: ar-20260619-032123-2d653c
