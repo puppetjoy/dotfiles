@@ -1,0 +1,3 @@
+gitlab-test/agent-requests-dev MR workflow canary (t_52d31b82 / ar-20260619-183647-8acdf7)
+Created by Beryl as a source-only canary to exercise the paved GitLab MR lifecycle.
+Not deployed. Not merged. No live materialization.
