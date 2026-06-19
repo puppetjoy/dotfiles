@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement canary
+Agent Request: ar-20260619-233948-13b749
+Task: t_aa343b5f
+This is a dev/test MR workflow canary on gitlab-test.eyrie/joy/dotfiles.
+No production GitLab writes, no merge, no deploy.
