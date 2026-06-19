@@ -1,0 +1,2 @@
+Beryl dotfiles MR canary for task t_407834b4 — fresh retry after MR44 evidence-contract fix.
+Source-only / MR-lifecycle-only. No deploy or refresh authorized.
