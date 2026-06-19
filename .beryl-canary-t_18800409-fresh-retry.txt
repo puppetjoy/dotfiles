@@ -1,0 +1,4 @@
+Beryl canary t_18800409 fresh retry
+Post-approval duplicate-MR guard + mixed-recipient routing fixes verified.
+Created 2026-06-19.
+(o_o)  🐝 ASCII bee canary activated by Joy's request (o_o)
