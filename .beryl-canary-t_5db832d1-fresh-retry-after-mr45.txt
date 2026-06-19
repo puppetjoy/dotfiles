@@ -1,0 +1,5 @@
+# Beryl canary: fresh retry after deterministic reviewer/approval gating fix
+# Task: t_5db832d1
+# Request: ar-20260619-051107-b43b4c
+# Branch: talon/t_5db832d1-fresh-beryl-dotfiles-mr-canary-after-mr45-review
+# Created: 2026-06-19
