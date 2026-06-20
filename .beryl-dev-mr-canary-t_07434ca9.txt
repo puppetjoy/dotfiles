@@ -10,3 +10,5 @@
 #
 # Source-only workflow canary. No merge, deploy, or cleanup.
 # Exercises the Beryl->Talon MR lifecycle with same-MR revision-update.
+#
+# Revision-loop: Talon requested this visible same-MR update
