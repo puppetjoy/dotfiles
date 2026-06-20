@@ -1,0 +1,5 @@
+Beryl MR workflow canary - dev/test only.
+Task: t_5edf787a
+Agent Request: ar-20260620-004311-cfa6fb
+This file is a harmless marker to exercise the paved GitLab MR lifecycle.
+Do not merge without Joy approval.
