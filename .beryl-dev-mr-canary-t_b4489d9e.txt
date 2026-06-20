@@ -1,0 +1,2 @@
+Beryl MR workflow self-improvement canary (source-only).
+Task: t_b4489d9e. This is a dev MR lifecycle test, not for merge or deploy.
