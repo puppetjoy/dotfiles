@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement canary
+Task: t_d15f75d4
+Request: ar-20260620-014514-066b90
+Host: gitlab-test.eyrie / joy/dotfiles
+Created: 2026-06-19T21:45:00Z
