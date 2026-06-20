@@ -1,0 +1,3 @@
+Dev/test MR workflow canary for Beryl.
+Agent Request: ar-20260620-221703-2ef05a
+Kanban Task: t_9f4a59e9
