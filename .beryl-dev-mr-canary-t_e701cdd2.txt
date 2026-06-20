@@ -1,0 +1,5 @@
+Beryl MR workflow canary marker
+Task: t_e701cdd2
+Request: ar-20260620-211430-64244b
+Created: 2026-06-20
+Purpose: Dev/test Beryl->Talon MR lifecycle canary (source-only, no deploy)
