@@ -1,0 +1,6 @@
+Beryl MR workflow self-improvement canary
+Task: t_b54abe41
+Request: ar-20260620-034818-a0da25
+Created: 2026-06-20
+Scope: source-only / MR-lifecycle-only on gitlab-test.eyrie
+Do NOT merge, deploy, or refresh-dotfiles.
