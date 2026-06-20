@@ -1,0 +1,12 @@
+# Beryl MR Workflow Self-Improvement Canary
+#
+# Task:    t_07434ca9
+# Request: ar-20260620-075658-56e238
+# Host:    gitlab-test.eyrie
+# Project: joy/dotfiles
+# Target:  main
+# Branch:  talon/t_07434ca9-beryl-mr-workflow-self-improvement-dotfiles-cana
+# Time:    2026-06-20
+#
+# Source-only workflow canary. No merge, deploy, or cleanup.
+# Exercises the Beryl->Talon MR lifecycle with same-MR revision-update.
