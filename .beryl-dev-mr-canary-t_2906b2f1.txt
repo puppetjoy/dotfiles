@@ -1,0 +1,6 @@
+Beryl MR workflow self-improvement dotfiles canary
+Task ID: t_2906b2f1
+Agent Request: ar-20260620-055323-ad9f4a
+GitLab host/project: gitlab-test.eyrie / joy/dotfiles
+Target branch: main
+Created: 2026-06-20
