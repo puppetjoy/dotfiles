@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement canary
+Task: t_5e66c2d5
+Request: ar-20260620-045046-64558c
+Host: gitlab-test.eyrie
+Created: 2026-06-20
