@@ -1,0 +1,3 @@
+Beryl dev MR canary — task t_6b9b9333 / ar-20260621-195605-80a294
+Purpose: Verify omitted GitLab hostname routes to gitlab-test.eyrie on agent-requests-dev board.
+Created: 2026-06-21
