@@ -1,0 +1,3 @@
+Canary marker for MR canary task t_6a3b64ca.
+Proves mentor handoff stays on agent-requests-dev and includes valid paved GitLab MR evidence.
+Post-fix validation of production fix t_e21360621-180225-9abdcc.
