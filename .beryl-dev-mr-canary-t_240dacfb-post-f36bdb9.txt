@@ -1,0 +1,3 @@
+Beryl MR canary: omitted-board mentor handoff proof after f36bdb9.
+Tests broker fix t_e2135c74 / f36bdb9 (ar-20260621-180225-9abdcc).
+This is a source-only canary; do not merge or deploy.
