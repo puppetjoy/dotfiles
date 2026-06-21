@@ -5,3 +5,4 @@ GitLab host: gitlab-test.eyrie
 Board: agent-requests-dev
 This file is a harmless marker for a real GitLab MR lifecycle exercise.
 No live dotfiles materialization is intended.
+Revision loop exercised: Talon requested this visible follow-up change before final signoff.
