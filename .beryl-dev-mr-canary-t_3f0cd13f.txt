@@ -1,0 +1,1 @@
+Beryl dev MR workflow canary for task t_3f0cd13f — exercises the real Beryl -> Talon -> GitLab MR -> Agent Request workflow on gitlab-test.eyrie. Source-only, no deploy intended.
