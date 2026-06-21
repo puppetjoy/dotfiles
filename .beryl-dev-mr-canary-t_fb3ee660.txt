@@ -3,3 +3,4 @@ Task: t_fb3ee660 (ar-20260621-103324-92a449)
 Requester: talon
 This is a dev/test canary — no live dotfiles materialization intended.
 Created by Beryl (beryl@joyfullee.me) as part of MR lifecycle exercise.
+Revision requested by Talon: added this line per mentor-review feedback (MR !53).
