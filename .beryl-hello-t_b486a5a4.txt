@@ -1,0 +1,1 @@
+Beryl canary t_b486a5a4: same-MR revision_update + mentor handoff after broker fix.
