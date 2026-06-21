@@ -1,0 +1,7 @@
+Beryl MR workflow canary — source-only, no live deployment.
+Task: t_bc161a49 (Beryl MR workflow self-improvement dotfiles canary)
+Request: ar-20260621-215800-5b2186
+GitLab host: gitlab-test.eyrie
+Board: agent-requests-dev
+This file is a harmless marker for a real GitLab MR lifecycle exercise.
+No live dotfiles materialization is intended.
