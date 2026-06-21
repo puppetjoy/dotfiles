@@ -1,0 +1,4 @@
+Beryl MR workflow canary — dev/test marker file
+Agent request: ar-20260621-042713-8869f6
+Task id: t_3ce39b75
+This is a harmless source-only canary for the Beryl→Talon GitLab MR workflow.
