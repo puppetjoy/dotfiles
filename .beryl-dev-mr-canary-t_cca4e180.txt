@@ -1,0 +1,3 @@
+Beryl MR workflow self-improvement canary — t_cca4e180
+Plain source-only marker file. No ERB template. No materialization.
+Date: 2026-06-21
