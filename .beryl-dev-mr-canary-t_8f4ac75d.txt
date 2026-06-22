@@ -1,0 +1,2 @@
+Beryl dev/test MR workflow canary (task t_8f4ac75d, request ar-20260622-172029-e61a53).
+Source-only canary — do not merge, deploy, or refresh dotfiles.
