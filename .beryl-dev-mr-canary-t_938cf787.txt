@@ -1,0 +1,2 @@
+Beryl dev MR workflow canary — source-only / MR-lifecycle-only.
+No live dotfiles materialization intended.
