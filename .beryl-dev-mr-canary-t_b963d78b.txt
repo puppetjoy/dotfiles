@@ -1,0 +1,5 @@
+This is a dev/test Beryl MR workflow canary marker file.
+Task: t_b963d78b
+Request: ar-20260622-192433-0c33c0
+Created by: Beryl (beryl@joyfullee.me)
+This is a source-only canary — no deploy, merge, or live side effects intended.
