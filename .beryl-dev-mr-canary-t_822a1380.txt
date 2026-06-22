@@ -1,0 +1,2 @@
+Dev/test Beryl MR workflow canary (task t_822a1380, request ar-20260622-212451-f06e81).
+This is a source-only canary test — do not deploy, merge, or clean up without explicit approval.
