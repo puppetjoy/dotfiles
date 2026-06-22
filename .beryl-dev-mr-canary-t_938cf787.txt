@@ -1,2 +1,3 @@
 Beryl dev MR workflow canary — source-only / MR-lifecycle-only.
 No live dotfiles materialization intended.
+Source request id: ar-20260622-222700-3402ff
