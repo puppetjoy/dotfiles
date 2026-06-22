@@ -1,0 +1,2 @@
+Beryl MR workflow self-improvement dotfiles canary (t_4cb3c706).
+Source-only / MR-lifecycle-only; no live dotfiles materialization intended.
