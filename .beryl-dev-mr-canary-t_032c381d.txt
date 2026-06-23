@@ -1,0 +1,2 @@
+Beryl MR workflow self-improvement dotfiles canary
+Task: t_032c381d | Agent Request: ar-20260623-074251-f7ae35
