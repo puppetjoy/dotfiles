@@ -1,0 +1,4 @@
+Beryl MR workflow self-improvement canary (dev/test).
+Agent Request: ar-20260623-185556-dc252a
+Kanban task: t_07ed7c0c
+No live dotfiles deployment is intended. Source-only MR lifecycle test.
