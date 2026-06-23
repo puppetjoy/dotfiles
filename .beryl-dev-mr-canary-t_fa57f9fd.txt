@@ -1,0 +1,4 @@
+This is a dev MR workflow canary marker file.
+Task: t_fa57f9fd — Beryl MR workflow self-improvement dotfiles canary
+Agent Request: ar-20260623-175302-ac0c34
+No live dotfiles deployment is intended. Source-only/MR-lifecycle-only canary.
