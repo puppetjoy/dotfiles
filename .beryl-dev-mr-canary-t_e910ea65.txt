@@ -1,0 +1,2 @@
+Beryl MR workflow self-improvement dotfiles canary (task t_e910ea65).
+Dev/test MR lifecycle exercise only — no deploy, no merge, no refresh.
