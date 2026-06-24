@@ -1,1 +1,2 @@
 This is a dev MR lifecycle canary for Beryl (task t_29ae4271).
+This canary authorizes no production deploy or dotfiles refresh.
