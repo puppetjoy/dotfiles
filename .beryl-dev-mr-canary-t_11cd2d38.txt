@@ -1,2 +1,3 @@
 Beryl MR workflow canary marker for task t_11cd2d38.
 Fresh retry after duplicate-comment cleanup. No side effects intended.
+Revision note: Talon's first-pass review (GitLab note 5000) approved the marker file and requested this follow-up line noting the review cycle.
