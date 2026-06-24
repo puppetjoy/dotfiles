@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement canary marker
+Task: t_96cb256d
+Agent Request: ar-20260624-162719-44b30c
+Host: gitlab-test.eyrie / joy/dotfiles
+Date: 2026-06-24
