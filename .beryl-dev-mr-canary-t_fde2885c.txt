@@ -1,0 +1,3 @@
+Beryl MR workflow self-improvement canary — t_fde2885c
+Created as part of Talon's Hermes self-improvement cron loop canary (ar-20260624-071424-79c8bd).
+Source-only test: no merge, deploy, or live materialization intended.
