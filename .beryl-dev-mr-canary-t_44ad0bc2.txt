@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement dotfiles canary
+Agent Request: ar-20260625-184122-117c50
+Task: t_44ad0bc2
+Timestamp: 2026-06-25T14:45:00Z
+Post-fix canary after deployed broker fix 1b66e257ed7101b117132ee8d070191834f399ea
