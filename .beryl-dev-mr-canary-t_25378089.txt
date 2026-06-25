@@ -1,0 +1,4 @@
+Dev/test Beryl MR workflow self-improvement dotfiles canary.
+Task ID: t_25378089
+Agent Request: ar-20260625-180129-6be041
+Created: 2026-06-25 14:xx UTC
