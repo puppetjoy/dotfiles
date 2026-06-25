@@ -1,0 +1,5 @@
+Beryl MR workflow self-improvement dev canary (t_d76b0848)
+Agent Request: ar-20260625-221157-ee7cc4
+Created: 2026-06-25
+This is a harmless marker file for a dev/test GitLab MR lifecycle canary.
+Source-only — no deployment, no merge, no materialization intended.
