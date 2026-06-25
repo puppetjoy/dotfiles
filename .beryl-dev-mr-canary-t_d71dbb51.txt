@@ -1,3 +1,4 @@
 Beryl MR workflow self-improvement dotfiles canary (ar-20260625-210855-375455 / t_d71dbb51)
 This marker file identifies the canary MR for the fresh dev/test Beryl GitLab lifecycle exercise.
 Source-only / MR-lifecycle-only. No merge, deploy, or materialization without explicit authorization.
+Talon requested this revision during the mentor-review loop.
