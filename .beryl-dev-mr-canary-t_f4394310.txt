@@ -8,3 +8,5 @@ after broker revision-loop guard fix abb707b30c48d35523e405f56b63d642374ddc02.
 Target: gitlab-test.eyrie/joy/dotfiles -> main
 Review: Talon (mentor)
 Follow-through: merge only; no live deploy intended
+
+Talon first-pass revision requested at mentor review (comment 667).
