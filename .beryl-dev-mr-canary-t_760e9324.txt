@@ -1,0 +1,2 @@
+This is a dev/test MR workflow canary file for task t_760e9324.
+Source-only — no live dotfiles materialization intended.
