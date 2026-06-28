@@ -3,3 +3,5 @@ Task: t_bb0c0513
 Request: ar-20260628-223457-21dd0d
 Created: 2026-06-28
 Type: source-only canary — not an ERB template, not a live deployment artifact.
+
+Revised per Talon mentor review (first-pass changes requested: 2026-06-28). Added a second plain-text line as requested.
