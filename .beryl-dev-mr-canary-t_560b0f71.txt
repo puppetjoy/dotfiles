@@ -1,0 +1,2 @@
+Beryl dev/test MR workflow canary for task t_560b0f71 (ar-20260629-210733-46d142).
+This is a source-only canary — no deploy, merge, or production mutation intended.
