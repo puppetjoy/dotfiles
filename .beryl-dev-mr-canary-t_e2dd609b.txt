@@ -1,2 +1,3 @@
 Beryl MR workflow self-improvement canary for task t_e2dd609b.
 This is a dev/test marker file for the Agent Request MR lifecycle.
+Same-MR revision loop exercised after Talon mentor feedback.
