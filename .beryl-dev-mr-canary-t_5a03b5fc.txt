@@ -2,3 +2,4 @@ Dev MR workflow canary for ar-20260629-211932-d072f3 (task t_5a03b5fc).
 This is a harmless post-fix verification after the Beryl gitlab/mr-canary
 paved-tool skill fix (agent-requests^1256).
 No merge, deploy, refresh-dotfiles, Puppet/Bolt apply, cleanup, or production mutation intended.
+Talon mentor review (commit 6b8c5d8e) requested a visible first-pass revision; this follow-up commit adds this line and pushes via agent_request_gitlab_mr_revision_update (mr !52).
