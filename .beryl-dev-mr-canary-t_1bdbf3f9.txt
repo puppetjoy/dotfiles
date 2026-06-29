@@ -1,1 +1,2 @@
 Dev MR workflow canary for agent request ar-20260629-221039-b70313 (task t_1bdbf3f9).
+Talon requested and Beryl made this same-MR revision.
