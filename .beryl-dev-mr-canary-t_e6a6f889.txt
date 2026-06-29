@@ -1,2 +1,3 @@
 Dev MR workflow canary for task t_e6a6f889 (Agent Request ar-20260629-175932-279067).
 This is a Beryl self-improvement canary run on gitlab-test.eyrie/joy/dotfiles.
+This line added per Talon mentor-review request to exercise the same-MR revision loop.
