@@ -1,2 +1,3 @@
 Dev MR workflow canary for task t_ef0ac600 (Agent Request ar-20260629-190329-943cbd).
 This file is a harmless marker to exercise the Beryl-to-Talon MR lifecycle on gitlab-test.eyrie.
+This is the first Talon-requested revision.
