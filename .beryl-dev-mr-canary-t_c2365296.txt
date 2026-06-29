@@ -1,0 +1,6 @@
+Beryl dev MR workflow canary marker for task t_c2365296.
+
+This file is a harmless canary created as part of Agent Request ar-20260629-231406-95f061,
+testing the fixed agent_request_gitlab_mr_revision_update path after the revision_update
+fix (ar-20260629-222043-de067d). No merge, deploy, or materialization intended —
+MR-lifecycle-only on gitlab-test.eyrie/joy/dotfiles.
