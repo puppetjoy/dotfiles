@@ -1,2 +1,4 @@
 Beryl dev MR workflow canary — source-only test on gitlab-test.eyrie.
 Task: t_70a485df / Agent Request ar-20260630-012032-612866 (^146).
+
+Revision: Talon requested this same-MR revision (note 919, MR !56).
