@@ -1,2 +1,3 @@
 Beryl MR workflow self-improvement canary marker file (task t_66b6e9db / ar-20260630-052812-31f8f4).
 Created by Beryl on 2026-06-30. Dev/test canary on gitlab-test.eyrie/joy/dotfiles.
+Talon requested the same-MR revision loop.
