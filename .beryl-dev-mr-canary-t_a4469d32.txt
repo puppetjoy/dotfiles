@@ -1,0 +1,7 @@
+Beryl MR workflow self-improvement canary — t_a4469d32
+Agent request: ar-20260630-225230-b8bd8f
+Scope: source-only / MR-lifecycle-only on gitlab-test.eyrie / joy/dotfiles
+Host: gitlab-test.eyrie
+Board: agent-requests-dev
+Created: 2026-06-30
+No merge, deploy, refresh-dotfiles, Puppet/Bolt apply, branch deletion, or worktree removal without explicit approval.
