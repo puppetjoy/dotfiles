@@ -1,2 +1,3 @@
 Dev MR workflow canary for Agent Request ar-20260630-001708-627846 / task t_1aafcf02.
 This file is a harmless marker created as part of a clean source-only MR lifecycle test.
+Talon requested this visible same-MR revision to verify the paved revision-update path works end-to-end.
