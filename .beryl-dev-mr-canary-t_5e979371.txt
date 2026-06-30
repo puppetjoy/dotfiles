@@ -1,0 +1,3 @@
+dev/test Beryl MR workflow self-improvement canary
+Agent Request: ar-20260630-042559-728ed7
+Task: t_5e979371
