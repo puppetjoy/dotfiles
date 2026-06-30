@@ -4,3 +4,4 @@ Request ID: ar-20260630-073331-991111
 Scope: source-only / MR-lifecycle-only
 Host: gitlab-test.eyrie / joy/dotfiles
 Created: 2026-06-30
+Revision: Talon mentor-review requested first-pass same-MR revision (comment 979, hash c85a2b6a)
