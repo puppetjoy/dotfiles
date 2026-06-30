@@ -5,3 +5,5 @@ Host: gitlab-test.eyrie
 Board: agent-requests-dev
 Created: 2026-06-30
 No merge, deploy, refresh-dotfiles, Puppet/Bolt apply, branch deletion, or worktree removal without explicit approval.
+
+Revision: Talon mentor-review requested first-pass changes (mentor_review_comment_id=1002); updated by Beryl on follow-up commit.
