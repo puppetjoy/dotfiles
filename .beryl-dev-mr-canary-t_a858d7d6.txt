@@ -1,0 +1,4 @@
+canary marker: t_a858d7d6 — fresh Beryl MR workflow canary after metadata-only public-comment fallback deploy
+request id: ar-20260701-220152-cc77ef
+branch: talon/t_a858d7d6-fresh-beryl-mr-workflow-canary-after-metadata-on
+created: 2026-07-01
