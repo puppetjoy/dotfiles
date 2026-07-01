@@ -1,0 +1,1 @@
+Beryl dev MR workflow canary (task t_9aaba37c, Agent Request ar-20260701-101811-eede8f).
