@@ -1,1 +1,2 @@
 Dev MR workflow canary for t_e59b870c (Agent Request ar-20260701-162748-c28ed1).
+Same-MR revision path exercised: this follow-up commit tests the paved agent_request_gitlab_mr_revision_update workflow on !49.
