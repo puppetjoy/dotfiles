@@ -3,3 +3,4 @@ Post-deploy Beryl revision-loop guard fix verification.
 Task: MR revision-loop guard post-deploy canary.
 Source-only / MR-lifecycle-only. No merge, deploy, or materialization.
 Request id: ar-20260701-044728-f5f579
+Revision loop follow-up: Talon requested one visible marker change.
