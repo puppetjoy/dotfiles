@@ -1,0 +1,3 @@
+This is a harmless tracked plain-text marker file for a dev MR workflow canary.
+Task: t_23c31087 — Beryl MR workflow self-improvement dotfiles canary
+Agent Request: ar-20260701-203913-2913e9
