@@ -1,0 +1,6 @@
+Beryl MR workflow self-improvement canary
+Task: t_ce4c5ffb
+Request: ar-20260701-040125-ec8b05
+Host: gitlab-test.eyrie / joy/dotfiles
+Scope: source-only / MR-lifecycle-only
+No merge, deploy, or refresh intended.
