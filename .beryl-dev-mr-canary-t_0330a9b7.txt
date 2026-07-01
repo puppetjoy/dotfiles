@@ -1,3 +1,5 @@
 Dev MR workflow canary for task t_0330a9b7
 Agent Request: ar-20260701-091505-c8338d
 Source-only/MR-lifecycle-only canary — no deploy or materialization intended.
+
+GitLab MR: joy/dotfiles!56
