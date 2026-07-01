@@ -2,3 +2,5 @@ Dev MR workflow canary for task t_8cd4ebb1 (Agent Request ar-20260701-060636-082
 This marker file proves Beryl can create a harmless tracked file, open a GitLab MR
 on gitlab-test.eyrie/joy/dotfiles, and exercise the paved tool MR lifecycle.
 Source-only canary — no merge, deploy, or materialization.
+
+Talon requested mentor-review revision (ar-20260701-060636-082420) — same-MR follow-up commit exercising the revision loop.
