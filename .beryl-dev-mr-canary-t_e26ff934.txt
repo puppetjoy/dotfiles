@@ -1,0 +1,2 @@
+Dev MR workflow canary for task t_e26ff934 (Agent Request ar-20260701-214157-bd77a7).
+This is a source-only marker file to exercise the Beryl-to-Talon GitLab MR canary pipeline on gitlab-test.eyrie.
