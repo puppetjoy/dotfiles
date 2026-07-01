@@ -1,0 +1,2 @@
+Dev MR workflow canary for agent request ar-20260701-183420-3d5fb9 (task t_57366ba5).
+This is a harmless marker file used only to exercise the Beryl GitLab MR lifecycle on gitlab-test.eyrie.
