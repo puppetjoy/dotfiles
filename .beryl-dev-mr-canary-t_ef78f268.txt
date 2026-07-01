@@ -1,0 +1,2 @@
+Dev MR workflow canary for Agent Request ar-20260701-081207-30d710 (task t_ef78f268).
+This marker file confirms the Beryl GitLab MR canary exercise on gitlab-test.eyrie/joy/dotfiles.
