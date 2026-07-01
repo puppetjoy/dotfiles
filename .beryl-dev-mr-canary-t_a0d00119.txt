@@ -1,3 +1,4 @@
 Dev MR workflow canary — agent request ar-20260701-050344-1f7aa7 / task t_a0d00119.
 This is a source-only, MR-lifecycle-only canary for Beryl→Talon self-improvement testing.
 No merge, deploy, or production changes are intended.
+Talon mentor-review requested changes (ar-20260701-050344-1f7aa7): add this fourth line as a same-MR revision loop test.
