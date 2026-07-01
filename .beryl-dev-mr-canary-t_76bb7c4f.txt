@@ -1,0 +1,5 @@
+Dev/test Beryl MR workflow self-improvement dotfiles canary.
+Task: t_76bb7c4f — Beryl MR workflow self-improvement dotfiles canary
+Agent request: ar-20260701-152440-b90180
+This is a harmless source-only marker file for MR-lifecycle testing on gitlab-test.eyrie.
+No live deployment intended.
