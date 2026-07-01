@@ -1,2 +1,3 @@
 Dev MR workflow canary for task t_667030ca (Agent Request ar-20260701-224511-8534b0).
 This is a harmless source-only test artifact.
+Talon requested this same-MR revision in the first mentor review cycle.
