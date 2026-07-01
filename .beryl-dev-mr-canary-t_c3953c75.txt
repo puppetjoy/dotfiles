@@ -1,0 +1,3 @@
+Beryl MR workflow self-improvement canary marker for task t_c3953c75
+Source-only / MR-lifecycle-only dev canary on gitlab-test.eyrie/joy/dotfiles.
+Agent Request: ar-20260701-070936-f50075
