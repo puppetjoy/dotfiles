@@ -1,0 +1,2 @@
+Dev MR workflow canary for agent request ar-20260701-234856-4a0c13 (task t_5e492873).
+This is a harmless source-only marker file exercising the Beryl GitLab MR canary flow.
