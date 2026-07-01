@@ -1,0 +1,8 @@
+Beryl dev MR canary marker
+Task: t_35740d94
+Agent Request: ar-20260701-025844-6f4b51
+Host: gitlab-test.eyrie
+Project: joy/dotfiles
+Branch: talon/t_35740d94-beryl-mr-workflow-self-improvement-dotfiles-cana
+Type: source-only / MR-lifecycle-only
+Scope: exercise Beryl → Talon ↔ GitLab MR paved-tool path
