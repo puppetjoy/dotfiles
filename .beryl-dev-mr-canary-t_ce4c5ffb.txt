@@ -5,3 +5,4 @@ Host: gitlab-test.eyrie / joy/dotfiles
 Scope: source-only / MR-lifecycle-only
 No merge, deploy, or refresh intended.
 Talon requested revision: same-MR revision loop exercised.
+Talon broker-guard revision: second canary revision marker for revision-loop exercise.
