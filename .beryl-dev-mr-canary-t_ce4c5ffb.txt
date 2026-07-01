@@ -4,3 +4,4 @@ Request: ar-20260701-040125-ec8b05
 Host: gitlab-test.eyrie / joy/dotfiles
 Scope: source-only / MR-lifecycle-only
 No merge, deploy, or refresh intended.
+Talon requested revision: same-MR revision loop exercised.
