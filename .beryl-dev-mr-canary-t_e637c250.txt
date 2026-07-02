@@ -1,0 +1,2 @@
+Dev MR workflow canary for agent request ar-20260702-025622-22c81e.
+Post-fix source-only mentor acceptance verification — no Joy action required after Talon mentor review.
