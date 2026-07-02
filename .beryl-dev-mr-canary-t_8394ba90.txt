@@ -1,0 +1,1 @@
+Dev MR workflow canary for task t_8394ba90. This file exercises the full Agent Request → GitLab MR → Talon mentor review → revision loop lifecycle on gitlab-test.eyrie.
