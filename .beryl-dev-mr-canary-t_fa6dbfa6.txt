@@ -1,0 +1,2 @@
+Dev MR workflow canary for Beryl.
+Agent Request ar-20260702-005140-030970 / task t_fa6dbfa6.
