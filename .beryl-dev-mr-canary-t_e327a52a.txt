@@ -1,0 +1,1 @@
+Dev MR workflow canary for agent request ar-20260702-032630-6edc09 / task t_e327a52a: verifying the same-MR revision-update public-comment sanitizer fix.
