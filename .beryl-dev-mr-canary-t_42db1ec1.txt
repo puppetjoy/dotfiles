@@ -1,2 +1,2 @@
 This is a dev MR workflow canary for task t_42db1ec1.
-Source-only test: exercises the full MR create/read/ready/request-review lifecycle on gitlab-test.eyrie.
+Source-only test: exercises the MR create/read/ready/request-review lifecycle and the same-MR revision loop on gitlab-test.eyrie.
