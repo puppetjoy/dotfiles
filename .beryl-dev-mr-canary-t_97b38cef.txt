@@ -1,1 +1,1 @@
-Beryl dev MR workflow canary for verifying inline revision_update sanitizer evidence after follow-up deploy (task t_97b38cef).
+Beryl dev MR workflow canary for checking inline revision_update sanitizer evidence after follow-up deploy (task t_97b38cef).
