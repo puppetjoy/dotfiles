@@ -1,0 +1,2 @@
+Dev MR workflow canary for agent request ar-20260702-060118.
+This is a source-only test — no merge, deploy, or Puppet apply intended.
