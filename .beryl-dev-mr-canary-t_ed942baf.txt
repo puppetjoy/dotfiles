@@ -1,2 +1,4 @@
 Dev MR workflow canary — t_ed942baf.
 This is a harmless marker file created by Beryl as part of a dev/test canary to exercise the GitLab MR lifecycle.
+
+Same-MR revision path exercised: added this follow-up line per Talon's review request.
