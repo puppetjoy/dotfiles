@@ -1,0 +1,2 @@
+Beryl dev MR workflow canary — task t_86ac1c1c (Agent Request ar-20260702-015420-904911)
+This is a source-only test marker file for the GitLab MR canary on gitlab-test.eyrie.
