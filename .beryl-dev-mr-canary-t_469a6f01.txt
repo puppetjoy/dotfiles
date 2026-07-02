@@ -1,1 +1,1 @@
-This is a dev MR workflow canary for task t_469a6f01, exercising the Beryl MR lifecycle on gitlab-test.eyrie.
+This is a same-MR revision canary for task t_469a6f01, exercising the Beryl MR lifecycle on gitlab-test.eyrie.
