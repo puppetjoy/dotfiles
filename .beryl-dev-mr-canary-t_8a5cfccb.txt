@@ -1,0 +1,2 @@
+Beryl dev MR workflow canary for task t_8a5cfccb.
+This is a source-only canary test exercising the GitLab MR lifecycle on gitlab-test.eyrie.
