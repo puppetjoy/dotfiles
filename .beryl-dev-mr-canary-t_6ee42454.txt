@@ -1,3 +1,4 @@
 Beryl dev MR workflow canary — task t_6ee42454
 Source-only / MR-lifecycle-only test on gitlab-test.eyrie / joy/dotfiles.
 No secrets, no PII, no deployment.
+First-pass revision: updated per mentor review feedback.
