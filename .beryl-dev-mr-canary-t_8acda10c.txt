@@ -1,0 +1,1 @@
+Beryl dev MR workflow canary (t_8acda10c, ar-20260703-074236-7c57e8). Source-only exercise on gitlab-test.eyrie/joy/dotfiles.
