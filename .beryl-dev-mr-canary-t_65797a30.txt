@@ -1,0 +1,3 @@
+Dev MR canary marker for task t_65797a30.
+Scenario: happy_path_after_talon_acceptance.
+Source-only canary — no deploy intended.
