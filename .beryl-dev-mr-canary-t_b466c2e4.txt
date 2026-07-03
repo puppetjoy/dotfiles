@@ -1,0 +1,1 @@
+Dev/test Beryl→Talon Agent Request ↔ GitLab MR workflow canary (task t_b466c2e4, request ar-20260703-033540-38211d).
