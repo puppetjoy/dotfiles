@@ -1,0 +1,4 @@
+Beryl MR workflow self-improvement dotfiles canary
+Task: t_ae3e10a1
+Request ID: ar-20260703-095232-35e9de
+Scope: source-only / MR-lifecycle-only dev canary
