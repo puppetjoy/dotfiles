@@ -1,0 +1,2 @@
+Beryl dev MR workflow canary for task t_22460774 (agent-requests self-improvement loop).
+Source-only exercise; no deploy/refresh intended.
