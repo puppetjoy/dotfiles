@@ -1,0 +1,2 @@
+Beryl dev MR workflow canary for task t_4e67d0ff (Agent Request ar-20260703-085010-9bdbd4).
+This is a harmless source-only test marker file for exercising the paved GitLab MR tool lifecycle.
