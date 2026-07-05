@@ -1,0 +1,4 @@
+Beryl dev MR canary marker for task t_d1365a92.
+Scenario: happy_path_after_talon_acceptance
+Revision loop required: false
+This file is harmless and exists only to exercise the MR canary lifecycle.
