@@ -1,0 +1,6 @@
+Beryl dev-MR canary marker
+Task: t_32995ad6
+Scenario: happy_path_after_talon_acceptance
+Revision loop required: false
+Scope: source-only / MR-lifecycle-only
+No deployment, refresh, or materialization intended.
