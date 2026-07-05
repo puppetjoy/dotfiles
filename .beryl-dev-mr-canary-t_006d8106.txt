@@ -1,0 +1,5 @@
+Beryl dev MR canary marker for task t_006d8106.
+Scenario: happy_path_after_talon_acceptance
+Revision loop required: false
+Agent request: ar-20260705-184358-0c2f73
+Post-9b8050c broker fix validation.
