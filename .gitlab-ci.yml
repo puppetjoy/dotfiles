@@ -1,28 +1,6 @@
----
-stages:
-  - 'Build'
-  - 'Trigger'
-
-'Preprocess templates':
-  stage: 'Build'
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  before_script:
-    - 'git config --global user.name "Dotfiles CI"'
-    - 'git config --global user.email git@joyfullee.me'
-    - 'eval $(ssh-agent -s)'
-    - 'chmod 600 "$SSH_PRIVATE_KEY" && ssh-add "$SSH_PRIVATE_KEY"'
-    - 'git remote set-url origin git@gitlab.joyfullee.me:joy/dotfiles.git'
+stages: [smoke]
+gitlab-1913-smoke:
+  stage: smoke
   script:
-    - 'FACTER_preprocessed=true ./.refresh'
-    - 'git add -f .'
-    - 'git commit -m "Preprocess templates" --no-gpg-sign'
-    - 'git push --force origin HEAD:preprocessed'
-
-.'Refresh stage1':
-  stage: 'Trigger'
-  variables:
-    BUILD: 'server'
-    REFRESH: 'true'
-  trigger:
-    project: 'nest/stage1'
+    - git --version
+    - test -n "$CI_COMMIT_SHA"
