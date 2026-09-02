@@ -1,0 +1,5 @@
+Beryl dev canary for GitLab owner-feedback routing
+Task: t_e88ad5d4
+Agent Request: ^252 (ar-20260902-165353-e6aa46)
+Created: 2026-09-02
+Scope: source-only canary; no merge, deploy, or materialization.
