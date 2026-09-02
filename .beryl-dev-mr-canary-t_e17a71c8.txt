@@ -1,0 +1,2 @@
+Beryl canary marker file for task t_e17a71c8.
+Source-only GitLab-test MR canary — no deploy or materialization.
