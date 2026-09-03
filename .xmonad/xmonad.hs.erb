@@ -236,7 +236,7 @@ manageHook' = composeOne
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop
-    , isTelegramMediaViewer                   -?> doFullFloat <+> doWindowAction (setBorderWidth' 0)
+    , isTelegramMediaViewer                   -?> doWindowAction (setBorderWidth' 0)
     , isSplash                                -?> doIgnore
     , isTooltip                               -?> doIgnore
     , isFloating                              -?> doCenterFloat
@@ -267,7 +267,6 @@ workspaces' = ["web", "ops", "dev", "music", "mail", "chat", "seven", "eight", "
 main = xmonad
     . docks
     . setEwmhActivateHook activateSwitchWs
-    . ewmhFullscreen
     . ewmh
     . pagerHints
     . withNavigation2DConfig def { defaultTiledNavigation = centerNavigation }
