@@ -3,6 +3,13 @@ stages:
   - 'Build'
   - 'Trigger'
 
+'Test XMonad fullscreen policy':
+  stage: 'Build'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - 'ruby test/xmonad_manual_fullscreen_test.rb'
+
 'Preprocess templates':
   stage: 'Build'
   rules:

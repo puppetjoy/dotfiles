@@ -236,7 +236,7 @@ manageHook' = composeOne
     , appName   =? "gp-saml-gui"              -?> doCenterFloat
     , isDesktop                               -?> doWindowAction sendToBottom
     , isDock                                  -?> doWindowAction sendToJustAboveDesktop
-    , isTelegramMediaViewer                   -?> doWindowAction (setBorderWidth' 0)
+    , isTelegramMediaViewer                   -?> doFullFloat <+> doWindowAction (setBorderWidth' 0)
     , isSplash                                -?> doIgnore
     , isTooltip                               -?> doIgnore
     , isFloating                              -?> doCenterFloat
