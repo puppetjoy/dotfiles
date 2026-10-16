@@ -8,6 +8,33 @@
 #
 
 source "${HOME}/lib/session-vars.sh"
-systemctl --user unset-environment "${SESSION_VARS[@]}"
-systemctl --user import-environment
+
+# Called inside the running XMonad/Sway session, before its user targets start
+# Keep absent session values absent in systemd, including old X/Wayland sockets
+systemctl --user unset-environment "${SESSION_VARS[@]}" || exit $?
+
+# Preserve the shell's runtime paths and defaults without importing credentials
+# or arbitrary application variables from the whole environment
+runtime_vars=(PATH RUBYLIB LANG LC_ALL LC_CTYPE LC_MESSAGES EDITOR VISUAL PAGER
+    TERMINFO SSH_AUTH_SOCK QT_QPA_PLATFORMTHEME GEM_HOME MOZ_DBUS_REMOTE
+    PAN_MESA_DEBUG)
+import_vars=()
+for var in "${SESSION_VARS[@]}" "${runtime_vars[@]}"; do
+    if (( ${+parameters[$var]} )); then
+        import_vars+=("$var")
+    fi
+done
+systemctl --user import-environment "${import_vars[@]}" || exit $?
+
+# D-Bus has no UnsetActivationEnvironment API: overwrite absent values with
+# empty strings so a persistent bus cannot retain the previous display/session
+# Leave bus ownership/address alone; never import the entire shell environment
+activation_vars=()
+for var in "${SESSION_VARS[@]}"; do
+    [[ $var == DBUS_SESSION_BUS_ADDRESS ]] && continue
+    activation_vars+=("${var}=${(P)var}")
+done
+dbus-update-activation-environment "${activation_vars[@]}" || exit $?
+
+# Retain the existing session-start recovery behavior, after synchronization
 systemctl --user reset-failed

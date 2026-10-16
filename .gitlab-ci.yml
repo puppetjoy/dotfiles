@@ -9,6 +9,7 @@ stages:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
   script:
     - 'ruby test/xmonad_manual_fullscreen_test.rb'
+    - 'python3 test/graphical_session_environment_test.py'
 
 'Preprocess templates':
   stage: 'Build'
