@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+# Falcon's KDE X11 mouse preference, before ksmserver runs kcminit
+set -eu
+
+[[ $(hostname -s) == falcon ]] || exit 0
+[[ -n ${DISPLAY:-} && -z ${WAYLAND_DISPLAY:-} && ${XDG_SESSION_TYPE:-x11} == x11 ]] || exit 0
+
+# X11LibInputXAccelProfileFlat is only KDE's computed default, overwritten by
+# kcminit (and incorrectly inferred as flat with three-value libinput profiles)
+# The explicit preference wins even when that cached default is wrong
+# KConfig owns parsing/locking and preserves every unrelated application setting
+exec kwriteconfig6 --file kcminputrc --group Mouse --key XLbInptAccelProfileFlat --type bool false

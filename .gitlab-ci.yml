@@ -10,6 +10,8 @@ stages:
   script:
     - 'ruby test/xmonad_manual_fullscreen_test.rb'
     - 'python3 test/graphical_session_environment_test.py'
+    - 'python3 test/falcon_mouse_profile_test.py'
+    - 'python3 test/falcon_mouse_native_test.py'
 
 'Preprocess templates':
   stage: 'Build'
