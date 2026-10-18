@@ -1,0 +1,13 @@
+[Unit]
+Description=Falcon adaptive mouse profile preference
+PartOf=xmonad-session.target
+Before=plasma-kcminit.service plasma-ksmserver.service
+ConditionHost=falcon
+
+[Service]
+Type=oneshot
+ExecStart=%h/bin/configure-falcon-mouse
+RemainAfterExit=yes
+
+[Install]
+WantedBy=xmonad-session.target
