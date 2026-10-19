@@ -6,4 +6,55 @@
 # rather than hardcoding in window manager configs.
 #
 
-exec /usr/bin/playerctl -i Gwenview "$@"
+# Leave explicit selection and observational commands to playerctl itself
+# In particular, --follow must retain its dynamic player discovery semantics
+for arg in "$@"; do
+    case "$arg" in
+        -p*|--player|--player=*|-i*|--ignore-player|--ignore-player=*|-a|--all|-F|--follow|-l|--list-all|-h|--help|-v|--version)
+            exec /usr/bin/playerctl -i Gwenview "$@"
+            ;;
+    esac
+done
+
+case "$1" in
+    play|pause|play-pause|stop|next|previous) ;;
+    position|volume|loop|shuffle)
+        (( $# > 1 )) || exec /usr/bin/playerctl -i Gwenview "$@"
+        ;;
+    *) exec /usr/bin/playerctl -i Gwenview "$@" ;;
+esac
+
+typeset -a spotify_players
+players=$(/usr/bin/playerctl -i Gwenview --list-all 2>/dev/null)
+for player in "${(@f)players}"; do
+    case "$player" in
+        spotify|spotify.instance<->)
+            spotify_players+=("$player")
+            ;;
+        chromium|chromium.instance<->|chrome|chrome.instance<->)
+            # Chrome's generic MPRIS name does not identify the dedicated app
+            # Use the exact Spotify origin, never a title or artist substring
+            url=$(/usr/bin/playerctl -p "$player" metadata xesam:url 2>/dev/null) || continue
+            case "$url" in
+                https://open.spotify.com/*|spotify:track:*|spotify:episode:*)
+                    spotify_players+=("$player")
+                    ;;
+            esac
+            ;;
+    esac
+done
+
+case ${#spotify_players} in
+    0) exec /usr/bin/playerctl -i Gwenview "$@" ;;
+    1) # playerctl also matches dotted descendants of a requested name
+       # Refuse an overlapping selector instead of controlling another instance
+       for player in "${(@f)players}"; do
+           if [[ "$player" == "$spotify_players[1]".* ]]; then
+               print -u2 'Ambiguous Spotify player selector; use an exact --player override'
+               exit 1
+           fi
+       done
+       exec /usr/bin/playerctl -i Gwenview -p "$spotify_players[1]" "$@" ;;
+    *) print -u2 'Multiple Spotify players found; select one explicitly with --player'
+       exit 1 ;;
+esac
