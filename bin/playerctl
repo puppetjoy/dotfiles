@@ -29,7 +29,72 @@ case "$1" in
     *) exec /usr/bin/playerctl -i Gwenview "$@" ;;
 esac
 
+# Resolve the bus owner, never infer a PID from the player name
+# Keep inspection local to this wrapper; no profile data or state cache is read
+managed_chrome_identity() {
+    python3 - "$1" <<'PY'
+import hashlib
+import os
+from pathlib import Path
+import re
+import shlex
+import subprocess
+import sys
+
+def bus(method, name, signature):
+    result = subprocess.run([
+        '/usr/bin/busctl', '--user', '--timeout=1', 'call',
+        'org.freedesktop.DBus', '/org/freedesktop/DBus',
+        'org.freedesktop.DBus', method, 's', name,
+    ], check=True, capture_output=True, text=True, timeout=2)
+    fields = shlex.split(result.stdout)
+    if len(fields) != 2 or fields[0] != signature:
+        raise ValueError('Unexpected D-Bus response')
+    return fields[1]
+
+def process(pid):
+    root = Path('/proc') / str(pid)
+    # stat field 22 is the start time; comm may contain spaces or parentheses
+    start = root.joinpath('stat').read_text().rsplit(')', 1)[1].split()[19]
+    executable = os.readlink(root / 'exe')
+    command = root.joinpath('cmdline').read_bytes()
+    if root.stat().st_uid != os.getuid():
+        raise ValueError('Foreign process')
+    return start, executable, command
+
+try:
+    name = 'org.mpris.MediaPlayer2.' + sys.argv[1]
+    owner = bus('GetNameOwner', name, 's')
+    if not re.fullmatch(r':[0-9]+\.[0-9]+', owner):
+        raise ValueError('Not a unique owner')
+    pid = int(bus('GetConnectionUnixProcessID', owner, 'u'))
+    if pid <= 0 or int(bus('GetConnectionUnixUser', owner, 'u')) != os.getuid():
+        raise ValueError('Foreign connection')
+    snapshot = process(pid)
+    start, executable, command = snapshot
+    args = command.decode().rstrip('\0').split('\0')
+    if executable != '/opt/google/chrome/chrome':
+        raise ValueError('Not managed Chrome')
+    profile = str(Path(os.environ.get('XDG_CONFIG_HOME') or str(Path.home() / '.config')) / 'nest-spotify')
+    # Require exactly one of each identity flag; reject overrides and child roles
+    for key, value in (('--user-data-dir', profile), ('--class', 'nest-spotify'),
+                       ('--app', 'https://open.spotify.com/')):
+        if [arg for arg in args[1:] if arg == key or arg.startswith(key + '=')] != [key + '=' + value]:
+            raise ValueError('Not the dedicated managed app')
+    if any(arg == '--type' or arg.startswith('--type=') for arg in args[1:]):
+        raise ValueError('Not the browser process')
+    if process(pid) != snapshot or bus('GetNameOwner', name, 's') != owner:
+        raise ValueError('Process or owner changed')
+    if int(bus('GetConnectionUnixProcessID', owner, 'u')) != pid:
+        raise ValueError('Connection changed')
+    print(owner, pid, start, hashlib.sha256(command).hexdigest())
+except (OSError, ValueError, IndexError, UnicodeError, subprocess.SubprocessError):
+    sys.exit(1)
+PY
+}
+
 typeset -a spotify_players
+typeset -A browser_identities
 players=$(/usr/bin/playerctl -i Gwenview --list-all 2>/dev/null)
 for player in "${(@f)players}"; do
     case "$player" in
@@ -37,14 +102,11 @@ for player in "${(@f)players}"; do
             spotify_players+=("$player")
             ;;
         chromium|chromium.instance<->|chrome|chrome.instance<->)
-            # Chrome's generic MPRIS name does not identify the dedicated app
-            # Use the exact Spotify origin, never a title or artist substring
-            url=$(/usr/bin/playerctl -p "$player" metadata xesam:url 2>/dev/null) || continue
-            case "$url" in
-                https://open.spotify.com/*|spotify:track:*|spotify:episode:*)
-                    spotify_players+=("$player")
-                    ;;
-            esac
+            # Hawk omits xesam:url even while playing; a URL also cannot
+            # distinguish an ordinary Spotify tab from the managed profile
+            identity=$(managed_chrome_identity "$player" 2>/dev/null) || continue
+            browser_identities[$player]=$identity
+            spotify_players+=("$player")
             ;;
     esac
 done
@@ -59,6 +121,20 @@ case ${#spotify_players} in
                exit 1
            fi
        done
+       if [[ -n "${browser_identities[$spotify_players[1]]}" ]]; then
+           # Recheck after discovery, including newly appeared selector overlaps
+           current_players=$(/usr/bin/playerctl -i Gwenview --list-all 2>/dev/null) || exit 1
+           if [[ "$current_players" != "$players" ]]; then
+               print -u2 'Media player set changed; retry or select explicitly'
+               exit 1
+           fi
+
+           identity=$(managed_chrome_identity "$spotify_players[1]" 2>/dev/null)
+           if (( $? != 0 )) || [[ "$identity" != "${browser_identities[$spotify_players[1]]}" ]]; then
+               print -u2 'Spotify browser identity changed; retry or select explicitly'
+               exit 1
+           fi
+       fi
        exec /usr/bin/playerctl -i Gwenview -p "$spotify_players[1]" "$@" ;;
     *) print -u2 'Multiple Spotify players found; select one explicitly with --player'
        exit 1 ;;
