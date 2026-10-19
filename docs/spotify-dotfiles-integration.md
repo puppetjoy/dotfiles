@@ -3,7 +3,7 @@
 ## Scope and ownership
 
 This is the dotfiles source portion of rollout ^1990, prepared in ^1991 and
-corrected in ^1994 against the parent's verified Hawk MPRIS receipt.
+corrected in ^1994 and ^1998 against the parent's verified Hawk MPRIS receipts.
 Nest owns packages and `/usr/local/bin/nest-spotify`. The parent rollout owns
 merge, managed deployment, real identity verification and acceptance.
 No application launch, playback, login, live refresh or XMonad restart is part
@@ -49,13 +49,22 @@ transport commands and seek/volume/loop/shuffle setters it discovers candidates:
   bus for `GetNameOwner`, then `GetConnectionUnixProcessID` and
   `GetConnectionUnixUser` on that unique owner, not the numeric player suffix.
   The current user's `/proc/PID/exe` must be `/opt/google/chrome/chrome` and its
-  NUL-delimited arguments must contain exactly one each of:
+  arguments must contain exactly one each of:
 
       --user-data-dir=${XDG_CONFIG_HOME:-$HOME/.config}/nest-spotify
       --class=nest-spotify
       --app=https://open.spotify.com/
 
   Child `--type` processes and conflicting/duplicate identity flags are refused.
+  Normal NUL-delimited arguments retain their boundaries, including spaces in a
+  profile path. Hawk also exposes a single space-flattened command field with
+  one NUL terminator. Only that narrow alternative accepts space-separated
+  tokens: the full executable path first, the identity flags above, and optional
+  `--ozone-platform=x11` and numeric `--force-device-scale-factor` flags. Every
+  flag must use `key=value` and occur once. Quotes, backslashes, other whitespace,
+  empty tokens, unknown flags and positional tokens refuse identification rather
+  than guessing lost boundaries or applying shell unquoting. Flattened profiles
+  with spaces are therefore unsupported, even if quoted. No shell is invoked.
   Titles, artists, URLs and generic Chrome identity alone never qualify. This
   intentionally stops treating an ordinary Chrome Spotify tab as the managed app.
 
@@ -144,7 +153,10 @@ and proc reads use a private directory. Neither real playerctl nor D-Bus is
 reachable. It exercises native and owner/process-based selection, missing URL,
 paused browser, competing sessions, ambiguity, stale owner/PID reuse, unavailable
 inspection, conflicting flags, explicit options, observations, seeking, fallback
-and failure propagation.
+and failure propagation. Flattened-command fixtures cover the observed flags,
+paused/stopped selection, quoting/escaping refusal, ambiguous and spaced paths,
+duplicate flags and the same owner/PID/start-time race checks. These tests are
+not a repeat of real Hawk identity inspection; that remains a parent gate.
 The Ruby test renders actual templates with fixture facts for multiple hosts and
 asserts the lifecycle wiring. Its compile test runs GHC when available, otherwise
 explicitly skips. Neither suite proves real window behavior or real MPRIS identity.

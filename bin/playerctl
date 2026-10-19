@@ -62,6 +62,35 @@ def process(pid):
         raise ValueError('Foreign process')
     return start, executable, command
 
+def arguments(command):
+    args = command.decode().rstrip('\0').split('\0')
+    if len(args) != 1:
+        return args
+    # Hawk exposes a single space-flattened field, not a shell command
+    # Lost boundaries cannot be recovered for quoted/escaped or spaced paths
+    flat = args[0]
+    if any(char in flat for char in "\"'\\") or any(
+            char.isspace() and char != ' ' for char in flat):
+        raise ValueError('Ambiguous flattened arguments')
+    args = flat.split(' ')
+    if args[0] != '/opt/google/chrome/chrome':
+        raise ValueError('Unexpected flattened executable')
+    keys = []
+    for arg in args[1:]:
+        key, separator, value = arg.partition('=')
+        if not separator or not value or key not in (
+                '--user-data-dir', '--class', '--app', '--ozone-platform',
+                '--force-device-scale-factor'):
+            raise ValueError('Unrecognized flattened argument')
+        keys.append(key)
+        if key == '--ozone-platform' and value != 'x11':
+            raise ValueError('Unexpected flattened platform')
+        if key == '--force-device-scale-factor' and not re.fullmatch(r'[0-9]+(?:\.[0-9]+)?', value):
+            raise ValueError('Unexpected flattened scale')
+    if len(keys) != len(set(keys)):
+        raise ValueError('Duplicate flattened flag')
+    return args
+
 try:
     name = 'org.mpris.MediaPlayer2.' + sys.argv[1]
     owner = bus('GetNameOwner', name, 's')
@@ -72,7 +101,7 @@ try:
         raise ValueError('Foreign connection')
     snapshot = process(pid)
     start, executable, command = snapshot
-    args = command.decode().rstrip('\0').split('\0')
+    args = arguments(command)
     if executable != '/opt/google/chrome/chrome':
         raise ValueError('Not managed Chrome')
     profile = str(Path(os.environ.get('XDG_CONFIG_HOME') or str(Path.home() / '.config')) / 'nest-spotify')

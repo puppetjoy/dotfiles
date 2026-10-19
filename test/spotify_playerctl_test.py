@@ -83,7 +83,8 @@ class SpotifyPlayerctlTest(unittest.TestCase):
             bus.chmod(0o755)
             proc_root = directory / 'proc'
             proc_root.mkdir()
-            config_home = directory / 'config'
+            config_home = directory / ('config space' if any(
+                data.get('spaced_config') for data in players.values()) else 'config')
             for data in players.values():
                 if not data.get('managed'):
                     continue
@@ -95,7 +96,8 @@ class SpotifyPlayerctlTest(unittest.TestCase):
                     '--ozone-platform=x11', '--force-device-scale-factor=2.0',
                     '--class=nest-spotify', '--app=https://open.spotify.com/'])
                 process_args = [arg.replace('{config}', str(config_home)) for arg in process_args]
-                (process / 'cmdline').write_bytes(('\0'.join(process_args) + '\0').encode())
+                separator = ' ' if data.get('flattened') else '\0'
+                (process / 'cmdline').write_bytes((separator.join(process_args) + '\0').encode())
                 (process / 'stat').write_text(str(data['pid']) + ' (chrome (test)) S ' + '0 ' * 18 + '123456 0')
             wrapper.write_text(source.replace('/usr/bin/playerctl', str(backend))
                                .replace('/usr/bin/busctl', str(bus))
@@ -133,6 +135,50 @@ class SpotifyPlayerctlTest(unittest.TestCase):
         proc, calls = self.run_wrapper({'chromium.instance7': managed(pid=800)}, 'position', '2+')
         self.assertEqual(0, proc.returncode, proc.stderr)
         self.assertEqual(['-i', 'Gwenview', '-p', 'chromium.instance7', 'position', '2+'], calls[-1])
+
+    def test_observed_flattened_chrome_selects_managed_player(self):
+        for state in ('Playing', 'Paused', 'Stopped'):
+            proc, calls = self.run_wrapper({'firefox': {}, 'chromium.instance7':
+                managed(pid=800, flattened=True, status=state)}, 'play-pause')
+            self.assertEqual(0, proc.returncode, proc.stderr)
+            self.assertEqual(['-i', 'Gwenview', '-p', 'chromium.instance7', 'play-pause'], calls[-1])
+
+    def test_flattened_quotes_escapes_paths_and_duplicate_flags_are_refused(self):
+        base = ['/opt/google/chrome/chrome', '--user-data-dir={config}/nest-spotify',
+                '--class=nest-spotify', '--app=https://open.spotify.com/']
+        invalid = [base + [flag] for flag in (
+            '--class=nest-spotify', '--class=other', '--user-data-dir={config}/nest-spotify',
+            '--app=https://open.spotify.com/', '--user-data-dir', '--type=renderer',
+            '--unknown=value', '--ozone-platform=wayland')]
+        invalid += [base + ['--ozone-platform=x11', '--ozone-platform=x11'],
+                    base + ['--force-device-scale-factor=2.0', '--force-device-scale-factor=1.0']]
+        for value in ('"{config}/nest-spotify"', "'{config}/nest-spotify'",
+                      '{config}/nest\\-spotify', '{config}/nest-spotify extra',
+                      '{config}/nest-spotify/../ordinary', '{config}/nest-spotify\t'):
+            invalid.append([base[0], '--user-data-dir=' + value, *base[2:]])
+        for args in invalid:
+            with self.subTest(args=args):
+                proc, calls = self.run_wrapper({'chromium.instance7':
+                    managed(flattened=True, args=args)}, 'pause')
+                self.assertEqual(0, proc.returncode, proc.stderr)
+                self.assertEqual(['-i', 'Gwenview', 'pause'], calls[-1])
+
+    def test_spaced_profile_requires_preserved_nul_boundaries(self):
+        for flattened in (False, True):
+            proc, calls = self.run_wrapper({'chromium.instance7':
+                managed(flattened=flattened, spaced_config=True)}, 'pause')
+            self.assertEqual(0, proc.returncode, proc.stderr)
+            expected = ['-i', 'Gwenview'] + ([] if flattened else ['-p', 'chromium.instance7']) + ['pause']
+            self.assertEqual(expected, calls[-1])
+
+    def test_flattened_identity_still_refuses_owner_and_process_races(self):
+        for change in ({'owner_change_at': 3}, {'reuse_at': 3}, {'vanish_at': 3},
+                       {'pid_change_at': 3}):
+            proc, calls = self.run_wrapper({'chromium.instance7':
+                managed(flattened=True, **change)}, 'pause')
+            self.assertEqual(1, proc.returncode, proc.stderr)
+            self.assertIn('identity changed', proc.stderr)
+            self.assertTrue(all('--list-all' in call for call in calls))
 
     def test_ordinary_spotify_tab_and_wrong_process_identity_do_not_qualify(self):
         for data in ({'url': 'https://open.spotify.com/track/x'},
