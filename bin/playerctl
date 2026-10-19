@@ -20,6 +20,11 @@ case "$1" in
     play|pause|play-pause|stop|next|previous) ;;
     position|volume|loop|shuffle)
         (( $# > 1 )) || exec /usr/bin/playerctl -i Gwenview "$@"
+        # A formatting option is not a property setter; negative numbers are
+        # still values and must keep the Spotify selection used for seeking
+        if [[ "$2" == -* && "$2" != -[0-9.]* ]]; then
+            exec /usr/bin/playerctl -i Gwenview "$@"
+        fi
         ;;
     *) exec /usr/bin/playerctl -i Gwenview "$@" ;;
 esac

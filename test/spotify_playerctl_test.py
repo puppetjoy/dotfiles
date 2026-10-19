@@ -98,7 +98,9 @@ class SpotifyPlayerctlTest(unittest.TestCase):
                      ('-i', 'spotify', 'play-pause'), ('--all', 'pause'),
                      ('--follow', 'status'), ('-F', 'metadata'), ('--list-all',),
                      ('status',), ('metadata', '--format', '{{title}}'), ('position',),
-                     ('volume',), ('loop',), ('shuffle',), ('--help',), ()):
+                     ('volume',), ('loop',), ('shuffle',), ('--help',),
+                     ('position', '--format', '{{position}}'),
+                     ('volume', '-f', '{{volume}}'), ()):
             with self.subTest(args=args):
                 proc, calls = self.run_wrapper({'spotify': {}}, *args)
                 self.assertEqual(0, proc.returncode, proc.stderr)
@@ -106,7 +108,7 @@ class SpotifyPlayerctlTest(unittest.TestCase):
 
     def test_transport_and_seek_target_spotify(self):
         for args in (('play',), ('pause',), ('stop',), ('next',), ('previous',),
-                     ('position', '10+'), ('position', '10-'), ('volume', '0.1+'),
+                     ('position', '10+'), ('position', '10-'), ('position', '-10'), ('volume', '0.1+'),
                      ('loop', 'Track'), ('shuffle', 'On')):
             with self.subTest(args=args):
                 proc, calls = self.run_wrapper({'spotify': {}}, *args)
