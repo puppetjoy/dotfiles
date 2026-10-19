@@ -12,6 +12,8 @@ stages:
     - 'python3 test/graphical_session_environment_test.py'
     - 'python3 test/falcon_mouse_profile_test.py'
     - 'python3 test/falcon_mouse_native_test.py'
+    - 'python3 test/spotify_playerctl_test.py'
+    - 'ruby test/spotify_music_workspace_test.rb'
 
 'Preprocess templates':
   stage: 'Build'

@@ -6,4 +6,165 @@
 # rather than hardcoding in window manager configs.
 #
 
-exec /usr/bin/playerctl -i Gwenview "$@"
+# Leave explicit selection and observational commands to playerctl itself
+# In particular, --follow must retain its dynamic player discovery semantics
+for arg in "$@"; do
+    case "$arg" in
+        -p*|--player|--player=*|-i*|--ignore-player|--ignore-player=*|-a|--all|-F|--follow|-l|--list-all|-h|--help|-v|--version)
+            exec /usr/bin/playerctl -i Gwenview "$@"
+            ;;
+    esac
+done
+
+case "$1" in
+    play|pause|play-pause|stop|next|previous) ;;
+    position|volume|loop|shuffle)
+        (( $# > 1 )) || exec /usr/bin/playerctl -i Gwenview "$@"
+        # A formatting option is not a property setter; negative numbers are
+        # still values and must keep the Spotify selection used for seeking
+        if [[ "$2" == -* && "$2" != -[0-9.]* ]]; then
+            exec /usr/bin/playerctl -i Gwenview "$@"
+        fi
+        ;;
+    *) exec /usr/bin/playerctl -i Gwenview "$@" ;;
+esac
+
+# Resolve the bus owner, never infer a PID from the player name
+# Keep inspection local to this wrapper; no profile data or state cache is read
+managed_chrome_identity() {
+    python3 - "$1" <<'PY'
+import hashlib
+import os
+from pathlib import Path
+import re
+import shlex
+import subprocess
+import sys
+
+def bus(method, name, signature):
+    result = subprocess.run([
+        '/usr/bin/busctl', '--user', '--timeout=1', 'call',
+        'org.freedesktop.DBus', '/org/freedesktop/DBus',
+        'org.freedesktop.DBus', method, 's', name,
+    ], check=True, capture_output=True, text=True, timeout=2)
+    fields = shlex.split(result.stdout)
+    if len(fields) != 2 or fields[0] != signature:
+        raise ValueError('Unexpected D-Bus response')
+    return fields[1]
+
+def process(pid):
+    root = Path('/proc') / str(pid)
+    # stat field 22 is the start time; comm may contain spaces or parentheses
+    start = root.joinpath('stat').read_text().rsplit(')', 1)[1].split()[19]
+    executable = os.readlink(root / 'exe')
+    command = root.joinpath('cmdline').read_bytes()
+    if root.stat().st_uid != os.getuid():
+        raise ValueError('Foreign process')
+    return start, executable, command
+
+def arguments(command):
+    args = command.decode().rstrip('\0').split('\0')
+    if len(args) != 1:
+        return args
+    # Hawk exposes a single space-flattened field, not a shell command
+    # Lost boundaries cannot be recovered for quoted/escaped or spaced paths
+    flat = args[0]
+    if any(char in flat for char in "\"'\\") or any(
+            char.isspace() and char != ' ' for char in flat):
+        raise ValueError('Ambiguous flattened arguments')
+    args = flat.split(' ')
+    if args[0] != '/opt/google/chrome/chrome':
+        raise ValueError('Unexpected flattened executable')
+    keys = []
+    for arg in args[1:]:
+        key, separator, value = arg.partition('=')
+        if not separator or not value or key not in (
+                '--user-data-dir', '--class', '--app', '--ozone-platform',
+                '--force-device-scale-factor'):
+            raise ValueError('Unrecognized flattened argument')
+        keys.append(key)
+        if key == '--ozone-platform' and value != 'x11':
+            raise ValueError('Unexpected flattened platform')
+        if key == '--force-device-scale-factor' and not re.fullmatch(r'[0-9]+(?:\.[0-9]+)?', value):
+            raise ValueError('Unexpected flattened scale')
+    if len(keys) != len(set(keys)):
+        raise ValueError('Duplicate flattened flag')
+    return args
+
+try:
+    name = 'org.mpris.MediaPlayer2.' + sys.argv[1]
+    owner = bus('GetNameOwner', name, 's')
+    if not re.fullmatch(r':[0-9]+\.[0-9]+', owner):
+        raise ValueError('Not a unique owner')
+    pid = int(bus('GetConnectionUnixProcessID', owner, 'u'))
+    if pid <= 0 or int(bus('GetConnectionUnixUser', owner, 'u')) != os.getuid():
+        raise ValueError('Foreign connection')
+    snapshot = process(pid)
+    start, executable, command = snapshot
+    args = arguments(command)
+    if executable != '/opt/google/chrome/chrome':
+        raise ValueError('Not managed Chrome')
+    profile = str(Path(os.environ.get('XDG_CONFIG_HOME') or str(Path.home() / '.config')) / 'nest-spotify')
+    # Require exactly one of each identity flag; reject overrides and child roles
+    for key, value in (('--user-data-dir', profile), ('--class', 'nest-spotify'),
+                       ('--app', 'https://open.spotify.com/')):
+        if [arg for arg in args[1:] if arg == key or arg.startswith(key + '=')] != [key + '=' + value]:
+            raise ValueError('Not the dedicated managed app')
+    if any(arg == '--type' or arg.startswith('--type=') for arg in args[1:]):
+        raise ValueError('Not the browser process')
+    if process(pid) != snapshot or bus('GetNameOwner', name, 's') != owner:
+        raise ValueError('Process or owner changed')
+    if int(bus('GetConnectionUnixProcessID', owner, 'u')) != pid:
+        raise ValueError('Connection changed')
+    print(owner, pid, start, hashlib.sha256(command).hexdigest())
+except (OSError, ValueError, IndexError, UnicodeError, subprocess.SubprocessError):
+    sys.exit(1)
+PY
+}
+
+typeset -a spotify_players
+typeset -A browser_identities
+players=$(/usr/bin/playerctl -i Gwenview --list-all 2>/dev/null)
+for player in "${(@f)players}"; do
+    case "$player" in
+        spotify|spotify.instance<->)
+            spotify_players+=("$player")
+            ;;
+        chromium|chromium.instance<->|chrome|chrome.instance<->)
+            # Hawk omits xesam:url even while playing; a URL also cannot
+            # distinguish an ordinary Spotify tab from the managed profile
+            identity=$(managed_chrome_identity "$player" 2>/dev/null) || continue
+            browser_identities[$player]=$identity
+            spotify_players+=("$player")
+            ;;
+    esac
+done
+
+case ${#spotify_players} in
+    0) exec /usr/bin/playerctl -i Gwenview "$@" ;;
+    1) # playerctl also matches dotted descendants of a requested name
+       # Refuse an overlapping selector instead of controlling another instance
+       for player in "${(@f)players}"; do
+           if [[ "$player" == "$spotify_players[1]".* ]]; then
+               print -u2 'Ambiguous Spotify player selector; use an exact --player override'
+               exit 1
+           fi
+       done
+       if [[ -n "${browser_identities[$spotify_players[1]]}" ]]; then
+           # Recheck after discovery, including newly appeared selector overlaps
+           current_players=$(/usr/bin/playerctl -i Gwenview --list-all 2>/dev/null) || exit 1
+           if [[ "$current_players" != "$players" ]]; then
+               print -u2 'Media player set changed; retry or select explicitly'
+               exit 1
+           fi
+
+           identity=$(managed_chrome_identity "$spotify_players[1]" 2>/dev/null)
+           if (( $? != 0 )) || [[ "$identity" != "${browser_identities[$spotify_players[1]]}" ]]; then
+               print -u2 'Spotify browser identity changed; retry or select explicitly'
+               exit 1
+           fi
+       fi
+       exec /usr/bin/playerctl -i Gwenview -p "$spotify_players[1]" "$@" ;;
+    *) print -u2 'Multiple Spotify players found; select one explicitly with --player'
+       exit 1 ;;
+esac

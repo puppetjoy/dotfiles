@@ -58,6 +58,30 @@ data PanelTimer = PanelTimer TimerId deriving Typeable
 instance ExtensionClass PanelTimer where
     initialValue = PanelTimer 0
 
+-- Avoid duplicate launches while the music window is still being mapped
+data MusicLaunchTimer = MusicLaunchTimer (Maybe TimerId) deriving Typeable
+instance ExtensionClass MusicLaunchTimer where
+    initialValue = MusicLaunchTimer Nothing
+
+isSpotify :: Query Bool
+isSpotify = className =? "Spotify" <||> className =? "nest-spotify"
+
+youtubeMusic :: X ()
+youtubeMusic = spawn "firefox -P music --kiosk https://music.youtube.com/"
+
+musicTopicAction :: X ()
+musicTopicAction = do
+    launcher <- io $ findExecutable "/usr/local/bin/nest-spotify"
+    if launcher == Nothing then youtubeMusic else do
+        existing <- gets (W.allWindows . windowset) >>= filterM (runQuery isSpotify) . sort
+        case existing of
+            (window:_) -> windows $ W.focusWindow window . W.shiftWin "music" window
+            [] -> do
+                MusicLaunchTimer pending <- XS.get
+                when (pending == Nothing) $ do
+                    startTimer 20 >>= XS.put . MusicLaunchTimer . Just
+                    spawn "/usr/local/bin/nest-spotify"
+
 isDesktop  = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DESKTOP"
 isDock     = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DOCK"
 isFloating = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_ABOVE"
@@ -122,7 +146,7 @@ topicConfig = def
     , topicActions = fromList $
         [ ("ops"    , (ask >>= spawn . terminal . config))
         , ("dev"    , spawn "code")
-        , ("music"  , spawn "firefox -P music --kiosk https://music.youtube.com/")
+        , ("music"  , musicTopicAction)
         , ("mail"   , spawn "firefox --new-window https://mail.google.com/mail/u/0/#inbox")
         ]
     }
@@ -227,7 +251,7 @@ layoutHook' = id
         , urgentTextColor     = "<%= dark[0x01].web %>"
         }
 
-manageHook' = composeOne
+manageHook' = (isSpotify --> doShift "music") <+> composeOne
     [ className =? "ksmserver"                -?> doIgnore
     , className =? "ksmserver-logout-greeter" -?> doIgnore
     , className =? "XLogo"                    -?> doFloat
@@ -247,8 +271,13 @@ manageHook' = composeOne
     ]
 
 handleEventHook' =
-    refocusLastWhen (return True) <+> lowerPanelOnTimer
+    refocusLastWhen (return True) <+> lowerPanelOnTimer <+> clearMusicLaunchTimer
   where
+    clearMusicLaunchTimer event = do
+        MusicLaunchTimer pending <- XS.get
+        forM_ pending $ \timerId -> handleTimer timerId event $
+            XS.put (MusicLaunchTimer Nothing) >> return Nothing
+        return (All True)
     -- Based on https://stackoverflow.com/questions/11045239/can-xmonads-loghook-be-run-at-set-intervals-rather-than-in-merely-response-to/14297833
     lowerPanelOnTimer event = do
         (PanelTimer timerId) <- XS.get
@@ -339,6 +368,7 @@ main = xmonad
     , ("M1-S-<Tab>"    , focusUp)
     , ("M-p"           , spawnRofi "-show drun")
     , ("M-w"           , spawnRofi "-show window")
+    , ("M-C-y"         , youtubeMusic)
     , ("M1-S-a"        , unGrab >> spawn "xdotool keyup alt+shift && ~/.xmonad/scripts/bw-type jtl/admin 4b70ddc9-0b8a-4479-9691-d330a6b61264")
     , ("M1-S-s"        , unGrab >> spawn "xdotool keyup alt+shift && ~/.xmonad/scripts/bw-type jtl/root 687ad9eb-489e-419c-984a-6dabdbe463b7")
     , ("M1-S-u"        , unGrab >> spawn "xdotool keyup alt+shift && ~/.xmonad/scripts/bw-type UMD 042bbfbc-befc-41d1-8c13-3fc3fd0e289f")
