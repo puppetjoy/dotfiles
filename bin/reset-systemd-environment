@@ -9,6 +9,19 @@
 
 source "${HOME}/lib/session-vars.sh"
 
+# XMonad loads the system X resources before starting this helper, but does not
+# export their cursor theme. An empty XCURSOR_THEME disables libXcursor's Xrm
+# fallback, unlike an absent variable. Resolve that fallback before clearing the
+# persistent activation environment; preserve explicit themes and Wayland policy
+if [[ $XDG_SESSION_TYPE == x11 && -n $DISPLAY && -z $XCURSOR_THEME ]]; then
+    while read -r resource value; do
+        if [[ $resource == Xcursor.theme: && -n $value ]]; then
+            export XCURSOR_THEME=$value
+            break
+        fi
+    done <<< "$(xrdb -query)"
+fi
+
 # Called inside the running XMonad/Sway session, before its user targets start
 # Keep absent session values absent in systemd, including old X/Wayland sockets
 systemctl --user unset-environment "${SESSION_VARS[@]}" || exit $?

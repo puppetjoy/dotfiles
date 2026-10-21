@@ -14,7 +14,8 @@ import tempfile
 import time
 import uuid
 
-KEYS = ('DISPLAY', 'XAUTHORITY', 'WAYLAND_DISPLAY', 'XDG_SESSION_TYPE')
+KEYS = ('DISPLAY', 'XAUTHORITY', 'WAYLAND_DISPLAY', 'XDG_SESSION_TYPE',
+        'XCURSOR_THEME', 'XCURSOR_SIZE', 'GDK_SCALE', 'GDK_DPI_SCALE')
 
 
 def activated(output, name):

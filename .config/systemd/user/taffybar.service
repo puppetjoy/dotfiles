@@ -1,6 +1,7 @@
 [Unit]
 Description=Taffybar
 PartOf=xmonad-session.target
+After=x-resources.service plasma-gtkconfig.service
 
 [Service]
 ExecStart=/usr/local/bin/taffybar

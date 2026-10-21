@@ -24,12 +24,14 @@ class GraphicalEnvironmentTest(unittest.TestCase):
         mock = self.bin / 'mock'
         mock.write_text('#!/usr/bin/env python3\n'
                         'import json,os,sys\n'
+                        'if os.path.basename(sys.argv[0]) == "xrdb":\n'
+                        ' print(os.environ.get("TEST_XRESOURCES", "")); sys.exit(0)\n'
                         'with open(os.environ["CALL_LOG"],"a") as f:\n'
                         ' f.write(json.dumps([os.path.basename(sys.argv[0]),sys.argv[1:],'
                         '{k:os.environ.get(k) for k in sys.argv[1:] if "=" not in k}])+"\\n")\n'
                         'sys.exit(1 if os.environ.get("FAIL_COMMAND") in [os.path.basename(sys.argv[0])] + sys.argv[1:] else 0)\n')
         mock.chmod(0o755)
-        for name in ('systemctl', 'dbus-update-activation-environment'):
+        for name in ('systemctl', 'dbus-update-activation-environment', 'xrdb'):
             (self.bin / name).symlink_to(mock)
         self.env = {'HOME': str(self.home), 'PATH': str(self.bin) + ':' + os.environ['PATH'],
                     'CALL_LOG': str(self.log), 'RUBYLIB': '/runtime/ruby',
@@ -81,6 +83,42 @@ class GraphicalEnvironmentTest(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(len(self.calls()), count)
             self.assertNotIn('reset-failed', str(self.calls()))
+
+    def test_x11_cursor_fallback_is_resolved_before_activation(self):
+        for theme in (None, '', 'custom-theme'):
+            self.log.unlink(missing_ok=True)
+            values = dict(DISPLAY=':0', XDG_SESSION_TYPE='x11', XCURSOR_SIZE='48',
+                          TEST_XRESOURCES='Xcursor.size:\t48\nXcursor.theme:\tbreeze_cursors\n')
+            if theme is not None:
+                values['XCURSOR_THEME'] = theme
+            result = self.run_helper(**values)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            calls = self.calls()
+            expected = theme or 'breeze_cursors'
+            self.assertEqual(calls[1][2]['XCURSOR_THEME'], expected)
+            self.assertIn('XCURSOR_THEME=' + expected, calls[2][1])
+            self.assertIn('XCURSOR_SIZE=48', calls[2][1])
+
+    def test_wayland_cursor_policy_does_not_use_x11_resources(self):
+        for theme in (None, 'sway-theme'):
+            self.log.unlink(missing_ok=True)
+            values = dict(DISPLAY=':1', XDG_SESSION_TYPE='wayland', XCURSOR_SIZE='24',
+                          TEST_XRESOURCES='Xcursor.theme:\tx11-only-theme\n')
+            if theme is not None:
+                values['XCURSOR_THEME'] = theme
+            result = self.run_helper(**values)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            calls = self.calls()
+            self.assertIn('XCURSOR_THEME=' + (theme or ''), calls[2][1])
+            self.assertIn('XCURSOR_SIZE=24', calls[2][1])
+
+    def test_cursor_consumers_wait_for_their_settings(self):
+        units = ROOT / '.config/systemd/user'
+        root_cursor = (units / 'xsetroot-cursor.service').read_text()
+        self.assertIn('After=x-resources.service\n', root_cursor)
+        self.assertNotIn('xmonad-x-resources.service', root_cursor)
+        bar = (units / 'taffybar.service').read_text()
+        self.assertIn('After=x-resources.service plasma-gtkconfig.service\n', bar)
 
     def test_both_compositors_sync_before_starting_services(self):
         for file, target in [('.xmonad/xmonad.hs.erb', 'xmonad-session.target'),
