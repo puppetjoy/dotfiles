@@ -29,6 +29,31 @@ created, and activation stays enabled. Existing reset-failed startup behavior is
 preserved, but occurs only after successful synchronization. Synchronization
 errors fail the helper and prevent callers starting session targets prematurely.
 
+Cursor fallback and startup ordering
+-----------------------------------
+
+An empty XCURSOR_THEME is not equivalent to an absent one: libXcursor treats it
+as an explicit theme and does not fall back to Xcursor.theme from Xresources.
+XMonad's Nest launcher loads /etc/X11/Xresources before the startup hook. When
+the X11 session has no nonempty cursor theme, the helper resolves that existing
+Xresource before synchronizing systemd and D-Bus. It does not hardcode a theme,
+override an explicit one, or apply X11 cursor policy to a Wayland session.
+
+The root-cursor unit orders after x-resources.service, not the obsolete
+xmonad-x-resources.service name. Taffybar waits for Xresources and Plasma's GTK
+settings initialization before creating cached cursors. Its Nest-managed
+GDK_SCALE=1 wrapper is intentional bar scaling and is not a cursor fix target.
+
+On Hawk, the dark pointer theme is the Nest-managed breeze_cursors, distinct
+from the Breeze_Snow pointer and breeze-dark icon theme. A nominal cursor size
+of 48 can select a 64-pixel image from that theme's available raster sizes.
+test/cursor_settings_probe.py reports the actual libXcursor/GTK image selection
+without modifying settings. It needs libX11, libXcursor and PyGObject/GTK 3.
+test/cursor_hover_probe.py briefly moves the pointer to root and Taffybar, reads
+only cursor pixels through XFixes, and restores the pointer in finally. Use that
+probe only for an authorized live canary; it does not capture desktop images,
+window titles, click, or send keyboard input. It also requires xdotool.
+
 Validation
 ----------
 
@@ -39,8 +64,8 @@ allowlisting, error propagation and both existing caller orderings. They do not
 claim a real Sway compositor launch or a fresh interactive login was performed.
 
 On an explicitly authorized live canary, test/graphical_activation_probe.py
-registers a unique temporary D-Bus service on the EXISTING bus, reads only four
-nonsecret display/session variable values in its activated process, and calls
+registers a unique temporary D-Bus service on the EXISTING bus, reads only the
+allowlisted display/session/cursor/scale values in its activated process, and calls
 XOpenDisplay/XCloseDisplay without opening windows or reading window data. It
 removes the service and scratch script/output afterward. It requires dbus-python
 and libX11. Run it with the intended user's existing bus address; do not create a

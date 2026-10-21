@@ -1,7 +1,7 @@
 [Unit]
-Description=load X resources
+Description=Set the root window cursor
 PartOf=xmonad-session.target
-After=xmonad-x-resources.service
+After=x-resources.service
 
 [Service]
 Type=oneshot
