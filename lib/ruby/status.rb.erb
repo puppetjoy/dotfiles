@@ -556,12 +556,10 @@ class SwayWorkspaces < StatusWidget
   def pretty_name(name)
     subs = {
       'web'     => "\uf0ac", # fa-globe
-      'dev'     => "\uf121", # fa-code
       'ops'     => "\uf120", # fa-terminal
       'music'   => "\uf001", # fa-music
       'mail'    => "\uf0e0", # fa-envelope
       'chat'    => "\uf075", # fa-comment
-      'windows' => "\uf17a", # fa-windows
     }
 
     return name unless name =~ /^(\d+).*?: (.*)/

@@ -42,12 +42,10 @@ workspaceRename :: String -> String
 workspaceRename s = replaceAll s $
     [ ("\x00a0"  , "")
     , ("web"     , fontAwesomeMarkup "\xf0ac") -- fa-globe
-    , ("dev"     , fontAwesomeMarkup "\xf121") -- fa-code
     , ("ops"     , fontAwesomeMarkup "\xf120") -- fa-terminal
     , ("music"   , fontAwesomeMarkup "\xf001") -- fa-music
     , ("mail"    , fontAwesomeMarkup "\xf0e0") -- fa-envelope
     , ("chat"    , fontAwesomeMarkup "\xf075") -- fa-comment
-    , ("windows" , fontAwesomeMarkup "\xf17a") -- fa-windows
     ] ++ (map (\s -> (s, fontAwesomeMarkup "\xf069")) unnamed)  -- fa-asterisk
   where
     unnamed = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
