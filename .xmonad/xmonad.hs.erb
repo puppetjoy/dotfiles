@@ -145,7 +145,7 @@ topicConfig = def
     { defaultTopicAction = \topic -> return ()
     , topicActions = fromList $
         [ ("ops"    , (ask >>= spawn . terminal . config))
-        , ("dev"    , spawn "code")
+        , ("chat"   , spawn "Telegram")
         , ("music"  , musicTopicAction)
         , ("mail"   , spawn "firefox --new-window https://mail.google.com/mail/u/0/#inbox")
         ]
@@ -214,7 +214,6 @@ logHook' = do
     raiseOverlays
 
 layoutHook' = id
-    . onWorkspace "windows" (noBorders Full)
     . mkToggle (single NBFULL)
     . gaps' [(<%= @facts['networking']['hostname'] == 'owl' ? '(D, 730)' : '(U, 108)' %>, False)]
     . avoidStruts
@@ -286,7 +285,7 @@ handleEventHook' =
             return Nothing
         return (All True)
 
-workspaces' = ["web", "ops", "dev", "music", "mail", "chat", "seven", "eight", "nine", "windows"]
+workspaces' = ["web", "chat", "ops", "music", "mail", "six", "seven", "eight", "nine", "ten"]
 
 
 --
@@ -313,7 +312,8 @@ main = xmonad
     , normalBorderColor  = "<%= dark[0x03].web %>"
     }
     `additionalKeysP`
-    [ ("M-0"           , windows $ W.greedyView "windows")
+    [ ("M-0"           , windows $ W.greedyView "ten")
+    , ("M-S-0"         , windows $ W.shift "ten")
     , ("M-S-="         , sendMessage $ IncMasterN 1)
     , ("M--"           , sendMessage $ IncMasterN (-1))
     , ("M-'"           , viewScreen def 0)
