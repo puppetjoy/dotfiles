@@ -7,7 +7,7 @@ ROOT = File.expand_path('..', __dir__)
 $LOAD_PATH.unshift File.join(ROOT, 'lib/puppet/dotfiles/lib')
 
 class WorkspaceMappingTest < Minitest::Test
-  NAMES = %w[web chat ops music mail six seven eight nine ten].freeze
+  NAMES = %w[web ops chat music mail six seven eight nine ten].freeze
 
   def render(path, hostname = 'hawk')
     @facts = { 'networking' => { 'hostname' => hostname },
@@ -30,6 +30,9 @@ class WorkspaceMappingTest < Minitest::Test
 
   def test_numeric_view_and_move_bindings_include_zero
     xmonad = render('.xmonad/xmonad.hs.erb')
+    # XMonad's default 1..9 view/shift bindings use the configured workspace list
+    assert_match(/, workspaces\s+= workspaces'/, xmonad)
+    refute_match(/"M-(?:S-)?[1-9]"/, xmonad)
     assert_includes xmonad, '("M-0"           , windows $ W.greedyView "ten")'
     assert_includes xmonad, '("M-S-0"         , windows $ W.shift "ten")'
     refute_match(/onWorkspace "(?:windows|ten)"/, xmonad)
@@ -44,6 +47,7 @@ class WorkspaceMappingTest < Minitest::Test
 
   def test_telegram_is_only_an_empty_xmonad_topic_action
     xmonad = render('.xmonad/xmonad.hs.erb')
+    assert_includes xmonad, '("ops"    , (ask >>= spawn . terminal . config))'
     assert_includes xmonad, '("chat"   , spawn "Telegram")'
     assert_includes xmonad, 'when (Data.List.null wins) $ topicAction topicConfig topic'
     refute_match(/spawn "code|"dev"|"windows"/, xmonad)
@@ -58,6 +62,9 @@ class WorkspaceMappingTest < Minitest::Test
 
   def test_bars_preserve_wildcard_icons_and_numeric_labels
     taffybar = render('.config/taffybar/taffybar.hs.erb')
+    assert_includes taffybar, '("ops"     , fontAwesomeMarkup "\xf120")'
+    assert_includes taffybar, '("chat"    , fontAwesomeMarkup "\xf075")'
+    assert_includes taffybar, 'workspaceName workspace'
     assert_includes taffybar, 'fontAwesomeMarkup "\xf069"'
     assert_includes taffybar, '(show $ wsNum + 1) ++ ": "'
     NAMES.drop(5).each { |name| assert_includes taffybar, "\"#{name}\"" }
@@ -73,7 +80,7 @@ class WorkspaceMappingTest < Minitest::Test
     widget.class_eval(formatter, 'status.rb')
     instance = widget.new
     NAMES.each_with_index do |name, i|
-      icon = ["\uf0ac", "\uf075", "\uf120", "\uf001", "\uf0e0"][i] || "\uf069"
+      icon = ["\uf0ac", "\uf120", "\uf075", "\uf001", "\uf0e0"][i] || "\uf069"
       assert_equal "#{i + 1}: #{icon}", instance.pretty_name("#{i + 1}: #{name}")
     end
     refute_match(/'dev'|'windows'/, formatter)
