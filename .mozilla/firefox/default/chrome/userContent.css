@@ -1,0 +1,11 @@
+@-moz-document url-prefix(about:blank) {
+  body {
+    background-color: #282828 !important;
+  }
+}
+
+/* Respect Gtk theme */
+* {
+  scrollbar-color: auto !important;
+  scrollbar-width: auto !important;
+}

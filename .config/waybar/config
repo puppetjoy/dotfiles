@@ -1,0 +1,114 @@
+{
+    "modules-left": [
+        "custom/sway-workspace-1",
+        "custom/sway-workspace-2",
+        "custom/sway-workspace-3",
+        "custom/sway-workspace-4",
+        "custom/sway-workspace-5",
+        "custom/sway-workspace-6",
+        "custom/sway-workspace-7",
+        "custom/sway-workspace-8",
+        "custom/sway-workspace-9",
+        "custom/sway-workspace-10",
+        "custom/window"
+    ],
+    "modules-right": [
+        "custom/load",
+        "custom/power",
+        "custom/network",
+        "custom/audio",
+        "custom/backlight",
+        "custom/swayidler",
+        "custom/vpn",
+        "clock"
+    ],
+    "custom/sway-workspace-1": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 1",
+        "on-click": "sway-greedy-view 1",
+        "tooltip": false
+    },
+    "custom/sway-workspace-2": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 2",
+        "on-click": "sway-greedy-view 2",
+        "tooltip": false
+    },
+    "custom/sway-workspace-3": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 3",
+        "on-click": "sway-greedy-view 3",
+        "tooltip": false
+    },
+    "custom/sway-workspace-4": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 4",
+        "on-click": "sway-greedy-view 4",
+        "tooltip": false
+    },
+    "custom/sway-workspace-5": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 5",
+        "on-click": "sway-greedy-view 5",
+        "tooltip": false
+    },
+    "custom/sway-workspace-6": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 6",
+        "on-click": "sway-greedy-view 6",
+        "tooltip": false
+    },
+    "custom/sway-workspace-7": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 7",
+        "on-click": "sway-greedy-view 7",
+        "tooltip": false
+    },
+    "custom/sway-workspace-8": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 8",
+        "on-click": "sway-greedy-view 8",
+        "tooltip": false
+    },
+    "custom/sway-workspace-9": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 9",
+        "on-click": "sway-greedy-view 9",
+        "tooltip": false
+    },
+    "custom/sway-workspace-10": {
+        "exec": "$HOME/.config/waybar/status/sway-workspace 10",
+        "on-click": "sway-greedy-view 10",
+        "tooltip": false
+    },
+    "custom/window": {
+        "exec": "$HOME/.config/waybar/status/widget window",
+        "tooltip": false
+    },
+    "custom/load": {
+        "exec": "$HOME/.config/waybar/status/widget load",
+        "tooltip": false
+    },
+    "custom/power": {
+        "exec": "$HOME/.config/waybar/status/widget power",
+        "tooltip": false
+    },
+    "custom/network": {
+        "exec": "$HOME/.config/waybar/status/widget network",
+        "tooltip": false
+    },
+    "custom/audio": {
+        "exec": "$HOME/.config/waybar/status/widget audio",
+        "on-scroll-up": "$HOME/.xmonad/scripts/volume +0.5dB",
+        "on-scroll-down": "$HOME/.xmonad/scripts/volume -0.5dB",
+        "tooltip": false
+    },
+    "custom/backlight": {
+        "exec": "$HOME/.config/waybar/status/widget backlight",
+        "tooltip": false
+    },
+    "custom/swayidler": {
+        "exec": "$HOME/.config/waybar/status/widget swayidler",
+        "tooltip": false
+    },
+    "custom/vpn": {
+        "exec": "$HOME/.config/waybar/status/widget vpn",
+        "tooltip": false
+    },
+    "clock": {
+        "interval": 1,
+        "format": "<span bgcolor='#282828' fgcolor='#383838'></span> {:%a %b %d %r} ",
+        "tooltip": false
+    }
+}

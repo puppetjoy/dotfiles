@@ -1,0 +1,31 @@
+* {
+    all: unset;
+}
+
+.taffy-window {
+    color: #282828;
+    font-family: monospace;
+    font-size: 9pt;
+}
+
+.taffy-box {
+    background-color: black;
+}
+
+.taffy-window menuitem:hover {
+    background-color: #282828;
+}
+
+.windows {
+    color: #d8d8d8;
+    font-family: sans-serif;
+    font-weight: 500;
+}
+
+.windows menu {
+    font-weight: normal;
+    padding: 0.3em;
+}
+
+/* vim:ft=css
+ */
